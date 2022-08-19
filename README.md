@@ -1,4 +1,3 @@
-# CITS3001_Project
 CITS3001 Project
 
 5 Classes - one for each team and one for the game
