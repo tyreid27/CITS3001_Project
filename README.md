@@ -7,7 +7,7 @@ Red Team Class
 - 5 levels of potent messaging
 
 Overall Game
-- set number of turns / days will end the game
+- set number of turns / days will end the game AND winner depends on % of green team members that will vote / not vote
 - otherwise blue running out of energy will end the game
 - uncertainty interval that is determined by input
 
@@ -16,6 +16,7 @@ Blue Team Class
 
 Green Team Class
 - 90% of agents
+- each agent has a boolean variable which states if they will vote on election day
 - adjacency list 
 - each agent has an opion and a level of uncertainty
 - range of connections is 1% to 10% of population or capped at 100 connections with a range in between
