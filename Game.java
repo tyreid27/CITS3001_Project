@@ -19,6 +19,7 @@ public class Game{
     // array of our green team agents
     GreenAgent[] greenTeam;
     // ... more stuff ...
+    RedAgent redAgent;
 
     public Game(int days, int agents){
         this.daysToElection = days;
@@ -30,6 +31,7 @@ public class Game{
         for(int i = 0; i < nGreen; i++){
             greenTeam[i] = new GreenAgent();
         }
+        this.redAgent = new RedAgent();
     }
     // class variables about the state of the game
 
@@ -45,6 +47,7 @@ public class Game{
         while(day != game.daysToElection){
             day++;
             System.out.println("day " + day);
+            game.redAgent.redTurn(game.greenTeam);
         }
 
         System.out.println("game over");
