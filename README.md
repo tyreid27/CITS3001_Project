@@ -1,6 +1,7 @@
 CITS3001 Project
 
 5 Classes - one for each team and one for the game
+
 Red Team Class
 - 1 agent
 - 5 levels of potent messaging
