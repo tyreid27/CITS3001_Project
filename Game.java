@@ -8,6 +8,8 @@ import java.util.*;
 public class Game{
     // number of days (rounds) until the game stops
     int daysToElection;
+    // the day into the election campaign
+    int day;
     // total number of agents in the game in total (green + grey)
     int numAgents;
     // number of green agents
@@ -18,7 +20,7 @@ public class Game{
     int willVote;
     // array of our green team agents
     GreenAgent[] greenTeam;
-    // ... more stuff ...
+    // the red agent
     RedAgent redAgent;
 
     public Game(int days, int agents){
@@ -33,24 +35,25 @@ public class Game{
         }
         this.redAgent = new RedAgent();
     }
-    // class variables about the state of the game
 
-    // constructor to make a new instance of the game
+    public void nextRound(){
+        day++;
+        System.out.println("day " + day);
+        //redAgent.redTurn(greenTeam);
+    }
 
-    // methods to execute certain moves which can be taken throughout the game
-
-
-    public static void main(String[] args){
-        Game game = new Game(5, 10);
-        int day = 0;
-
-        while(day != game.daysToElection){
-            day++;
-            System.out.println("day " + day);
-            game.redAgent.redTurn(game.greenTeam);
+    public void start(){
+        while(day != daysToElection){
+            nextRound();
         }
+        System.out.println("Game Over");
+    }
+    
+    public static void main(String[] args){
+        //open a file here and input the params into the game
 
-        System.out.println("game over");
+        Game game = new Game(5, 10);
+        game.start();
     }
 }
 
