@@ -2,7 +2,7 @@ import java.util.*;
 
 /**
  * This is the class to call to start the game
- * Compile with "javac Game.java GreenAgent.java"
+ * Compile with "javac Game.java GreenAgent.java RedAgent.java GreyAgent.java"
  * Run with "java Game"
  */
 public class Game{
