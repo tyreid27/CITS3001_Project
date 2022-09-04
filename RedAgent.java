@@ -6,7 +6,7 @@ import java.util.*;
 public class RedAgent {
 
     public RedAgent() {
-
+        
     }
 
     public double uncertaintyChange(int messagePotency) {
