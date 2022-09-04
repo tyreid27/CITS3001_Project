@@ -11,6 +11,8 @@ public class GreyAgent{
     int worksFor;
     // which green team agents this grey agent can talk to
     ArrayList<GreenAgent> connections;
+    // this agents unique id
+    int id;
 
     /**
      * constructor for random grey agent

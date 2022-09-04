@@ -11,6 +11,8 @@ public class GreenAgent {
     boolean willVote;
     // higher uncertainity means higher probability the agents opinion will change (-10 to 10)
     int uncertainity;
+    // this agents unique id
+    int id;
     
     /**
      * constructor for green agent. Manually set the default parameters.

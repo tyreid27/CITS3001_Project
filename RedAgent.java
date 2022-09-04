@@ -4,9 +4,11 @@ import java.util.*;
  */
 
 public class RedAgent {
+    // this agents unique id
+    int id;
 
     public RedAgent() {
-        
+
     }
 
     public double uncertaintyChange(int messagePotency) {
