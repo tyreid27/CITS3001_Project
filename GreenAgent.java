@@ -10,7 +10,7 @@ public class GreenAgent {
     // true if the agent will be voting in the election, false otherwise
     boolean willVote;
     // higher uncertainity means higher probability the agents opinion will change (-10 to 10)
-    int uncertainity;
+    double uncertainity;
     // this agents unique id
     int id;
     
