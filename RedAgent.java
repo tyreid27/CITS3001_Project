@@ -61,33 +61,26 @@ public class RedAgent {
 
             // toward uncertainty
             if (!towardCertainty) {
-                if (!greenTeam[i].willVote) {
-                    // if new uncertainty value becomes higher than 10, which indicates the agent now switches to willVote
-                    if ((greenTeam[i].uncertainty + uncertaintyChange) > 10) {
-                        // from red to blue team
-                        greenTeam[i].willVote = true;
-                        greenTeam[i].uncertainty = 10 - ((currentUncertainty + uncertaintyChange) - 10); // 
-                    } else {
-                        greenTeam[i].uncertainty = currentUncertainty + uncertaintyChange;
-                    }
-                }
-                else {
-                    if ((greenTeam[i].uncertainty + uncertaintyChange) > 10) {
-                        // from blue to red team
+                // if new uncertainty value becomes higher than 10, which indicates the agent now switches to willVote
+                if ((currentUncertainty + uncertaintyChange) > 10) {
+                    greenTeam[i].uncertainty = 10 - ((currentUncertainty + uncertaintyChange) - 10); 
+                    // If green agent was voting for blue, switch to red and vice versa
+                    if (greenTeam[i].willVote) {
                         greenTeam[i].willVote = false;
-                        greenTeam[i].uncertainty = 10 - ((currentUncertainty + uncertaintyChange) - 10);
                     } else {
-                        greenTeam[i].uncertainty = currentUncertainty + uncertaintyChange;
+                        greenTeam[i].willVote = true;
                     }
+                } else {
+                    greenTeam[i].uncertainty = currentUncertainty + uncertaintyChange;
                 }
             } 
             // toward certainty
             else {
-                if ((greenTeam[i].uncertainty - uncertaintyChange) < 0) {
+                if ((currentUncertainty - uncertaintyChange) < 0) {
                     greenTeam[i].uncertainty = 0;
                 }
                 else {
-                    greenTeam[i].uncertainty -= uncertaintyChange;
+                    greenTeam[i].uncertainty = currentUncertainty - uncertaintyChange;
                 }
             }
         }
