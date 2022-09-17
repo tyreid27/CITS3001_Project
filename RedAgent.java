@@ -48,16 +48,16 @@ public class RedAgent {
     }
 
     public GreenAgent[] redTurn(GreenAgent[] greenTeam) {
-        Random rand = new Random();
-        Random random = new Random();
-        messagePotency = rand.nextDouble((2.5-0.5) + 0.5) + 0.5;
+        Random randMP = new Random();
+        Random randTC = new Random();
+        messagePotency = randMP.nextDouble((2.5-0.5) + 0.5) + 0.5;
         // loop through greenteam members and interact with them.
         for (int i = 0; i < greenTeam.length; i++) {
             double currentUncertainty = greenTeam[i].uncertainty;
              // uncertaintyChange calculated to change uncertainty by 0 - 2.5 based on current uncertainty level and message potency
             double uncertaintyChange = (currentUncertainty * messagePotency) / 10;
             double directionProbaility = changeDirectionProbabilty( (int) greenTeam[i].uncertainty);
-            boolean towardCertainty = random.nextInt(1,101) <= directionProbaility;
+            boolean towardCertainty = randTC.nextInt(1,101) <= directionProbaility;
 
             // toward uncertainty
             if (!towardCertainty) {
