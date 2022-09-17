@@ -33,12 +33,13 @@ public class GreenAgent {
     /**
      * constructor for green agent that sets random parameters for willVote and uncertainty.
      */
-     public GreenAgent(){
+     public GreenAgent(int id){
         this.connections = new ArrayList<GreenAgent>();
         Random rand = new Random();
         // randomly choose True or False
         this.willVote = rand.nextBoolean();
         // choose int between 0 and 21 for range -10 to 10
         this.uncertainty = rand.nextInt(21) - 10;
+        this.id = id;
      }
 }
