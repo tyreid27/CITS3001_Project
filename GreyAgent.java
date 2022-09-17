@@ -11,14 +11,15 @@ public class GreyAgent{
     int worksFor;
     // which green team agents this grey agent can talk to
     ArrayList<GreenAgent> connections;
-    // this agents unique id
+    // the id of this greyAgent to keep track of grey agents
     int id;
 
     /**
      * constructor for random grey agent
      */
-    public GreyAgent(){
+    public GreyAgent(int id){
         Random rand = new Random();
-        worksFor = rand.nextInt(2);
+        this.worksFor = rand.nextInt(2);
+        this.id = id;
     }
 }
