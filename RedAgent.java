@@ -14,7 +14,7 @@ public class RedAgent {
     // calculate probaility of continuing with current voting direction
     public int changeDirectionProbabilty(int uncertainty) {
         int probability = 0;
-        if (uncertainty > 0 && uncertainty <= 1) {
+        if (uncertainty >= 0 && uncertainty <= 1) {
             probability = 95;
         }
         if (uncertainty > 1 && uncertainty <= 2) {
@@ -56,8 +56,8 @@ public class RedAgent {
             double currentUncertainty = greenTeam[i].uncertainty;
              // uncertaintyChange calculated to change uncertainty by 0 - 2.5 based on current uncertainty level and message potency
             double uncertaintyChange = (currentUncertainty * messagePotency) / 10;
-            double directionProbaility = changeDirectionProbabilty(greenTeam[i].uncertainty);
-            boolean towardCertainty = random.nextInt(1,101) <= directionProbaility;
+            double directionProbability = changeDirectionProbabilty(greenTeam[i].uncertainty);
+            boolean towardCertainty = random.nextInt(1,101) <= directionProbability;
 
             // toward uncertainty
             if (!towardCertainty) {
@@ -66,7 +66,7 @@ public class RedAgent {
                     if ((greenTeam[i].uncertainty + uncertaintyChange) > 10) {
                         // from red to blue team
                         greenTeam[i].willVote = true;
-                        greenTeam[i].uncertainty = 10 - ((currentUncertainty + uncertaintyChange) - 10);
+                        greenTeam[i].uncertainty = 10 - ((currentUncertainty + uncertaintyChange) - 10); // 
                     } else {
                         greenTeam[i].uncertainty = currentUncertainty + uncertaintyChange;
                     }
@@ -81,10 +81,10 @@ public class RedAgent {
                     }
                 }
             } 
-            // toward uncertainty
+            // toward certainty
             else {
                 if ((greenTeam[i].uncertainty - uncertaintyChange) < 0) {
-                    greenTeam[i].unceratainty = 0;
+                    greenTeam[i].uncertainty = 0;
                 }
                 else {
                     greenTeam[i].uncertainty -= uncertaintyChange;

@@ -10,7 +10,7 @@ public class GreenAgent {
     // true if the agent will be voting in the election, false otherwise
     boolean willVote;
     // higher uncertainity means higher probability the agents opinion will change (-10 to 10)
-    double uncertainity;
+    double uncertainty;
     // this agents unique id
     int id;
     
@@ -23,9 +23,9 @@ public class GreenAgent {
         this.connections = new ArrayList<GreenAgent>();
         this.willVote = willVote;
         if(uncertainity <= 10 && uncertainity >= -10){
-            this.uncertainity = uncertainity;
+            this.uncertainty = uncertainity;
         } else{
-            this.uncertainity = 0;
+            this.uncertainty = 0;
         }
     }
 
@@ -38,6 +38,6 @@ public class GreenAgent {
         // randomly choose True or False
         this.willVote = rand.nextBoolean();
         // choose int between 0 and 21 for range -10 to 10
-        this.uncertainity = rand.nextInt(21) - 10;
+        this.uncertainty = rand.nextInt(21) - 10;
      }
 }
