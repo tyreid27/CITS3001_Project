@@ -30,14 +30,18 @@ public class Game{
      * @param nGreen the number of green agents on the green team
      * @param nGrey the number of grey agents on the grey team
      * @param prob the probability of connection between two green agents
-     * @param prop the proportion of green agents initially voting / not voting
+     * @param prop the proportion of grey agents on blue team
      */
     public Game(int days, int nGreen, int nGrey, int prob, int prop){
         this.daysToElection = days;
+        // initialise array of grey team members
+        this.greyTeam = new GreyAgent[nGrey];
+        for(int i = 0; i < nGrey; i++)
+            greyTeam[i] = new GreyAgent(i);
         // initialise array of green team members 
         this.greenTeam = new GreenAgent[nGreen];
         for(int i = 0; i < nGreen; i++)
-            greenTeam[i] = new GreenAgent();
+            greenTeam[i] = new GreenAgent(i);
         // initialise the network
         this.network = new int[nGreen][nGreen];
         // make connections according to the prob
@@ -59,6 +63,48 @@ public class Game{
         }
         this.redAgent = new RedAgent();
         this.blueAgent = new BlueAgent();
+        this.day = 0;
+    }
+
+    /**
+     * constructor that creates a user defined network
+     * @param days the number of days that the election runs for
+     * @param nGreen the number of agents on the green team 
+     * @param nGrey the number of agents on the grey team
+     * @param network the input file containing edges between green nodes
+     * @param prop the percentage of grey agents on blue team
+     */
+     public Game (int days, int nGreen, int nGrey, String edges, int prop){
+        this.daysToElection = days;
+        // initialise array of grey team members
+        this.greyTeam = new GreyAgent[nGrey];
+        for(int i = 0; i < nGrey; i++)
+            greyTeam[i] = new GreyAgent(i);
+        // init array of green team members
+        this.greenTeam = new GreenAgent[nGreen];
+        for(int i = 0; i < nGreen; i++)
+            greenTeam[i] = new GreenAgent(i);
+        // initialise the network
+        this.network = new int[nGreen][nGreen];
+        try{
+            FileInputStream file = new FileInputStream(edges);       
+            Scanner scanner = new Scanner(file);
+            while(scanner.hasNextLine()){ 
+                String row = scanner.nextLine();
+                int id1 = Integer.valueOf(row.split(",")[0]);
+                int id2 = Integer.valueOf(row.split(",")[1]);
+                network[id1][id2] = 2;
+                network[id2][id1] = 2;
+                greenTeam[id1].connections.add(greenTeam[id2]);
+                greenTeam[id2].connections.add(greenTeam[id1]);
+            }  
+            scanner.close();
+        } catch(IOException e) {  
+            e.printStackTrace();  
+        }
+        this.redAgent = new RedAgent();
+        this.blueAgent = new BlueAgent();
+        this.day = 0;
     }
 
     public void nextRound(){
@@ -78,24 +124,30 @@ public class Game{
         String[] columns = info.split(",");
     }
     
+    public static void printUsage(){
+        System.out.println("Usage: java Game <days> <size of green team> <size of grey team> <network % density> <% of greys on blue team>");
+        System.out.println("     : java Game -f <days> <size of green team> <size of grey team> <network file> <% of greys on blue team>");
+    }
+
     public static void main(String[] args){
-        // create a new game
-        Game game = new Game(5, 100, 10, 50, 50);
-        // initialise all the agents
-        try{
-            File agents = new File("agents.csv");
-            Scanner agent = new Scanner(agents);
-            while (agent.hasNextLine()){
-                String data = agent.nextLine();
-                game.addAgent(data);
-            }
-            agent.close();
+        // the game initial state of the game;
+        Game game = null;
+        // print usage information
+        if(args.length < 2){
+            printUsage();
+            return;
         }
-        catch(FileNotFoundException e){
-            System.out.println("An error occured while trying to open 'agents.csv");
+        // determine which constructor to call
+        if(args[0].equals("-f")){
+            game = new Game(Integer.valueOf(args[1]), Integer.valueOf(args[2]), Integer.valueOf(args[3]), args[4], Integer.valueOf(args[5]));
+        } else {
+            game = new Game(Integer.valueOf(args[0]), Integer.valueOf(args[1]), Integer.valueOf(args[2]), Integer.valueOf(args[3]), Integer.valueOf(args[4]));
         }
         // start the game
-        game.start();
+        if(game != null)
+            game.start();
+        else
+            System.out.println("something went wrong");
     }
 }
 

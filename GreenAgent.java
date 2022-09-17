@@ -28,6 +28,7 @@ public class GreenAgent {
         } else{
             this.uncertainty = 0;
         }
+        //????? this doesnt work yet
     }
 
     /**
