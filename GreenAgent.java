@@ -19,18 +19,19 @@ public class GreenAgent {
      * @param connections an array of GreenAgent that this agent can talk to.
      * @param willVote the value for if this agent will vote.
      */
-    public GreenAgent(ArrayList<GreenAgent> connections, boolean willVote, int uncertainity){
+    public GreenAgent(ArrayList<GreenAgent> connections, boolean willVote, int uncertainty, int id){
         this.connections = new ArrayList<GreenAgent>();
         this.willVote = willVote;
-        if(uncertainity <= 10 && uncertainity >= -10){
-            this.uncertainty = uncertainity;
+        this.id = id;
+        if(uncertainty <= 10 && uncertainty >= -10){
+            this.uncertainty = uncertainty;
         } else{
             this.uncertainty = 0;
         }
     }
 
     /**
-     * constructor for green agent that sets random parameters for willVote and uncertainity.
+     * constructor for green agent that sets random parameters for willVote and uncertainty.
      */
      public GreenAgent(){
         this.connections = new ArrayList<GreenAgent>();

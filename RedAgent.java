@@ -56,8 +56,8 @@ public class RedAgent {
             double currentUncertainty = greenTeam[i].uncertainty;
              // uncertaintyChange calculated to change uncertainty by 0 - 2.5 based on current uncertainty level and message potency
             double uncertaintyChange = (currentUncertainty * messagePotency) / 10;
-            double directionProbability = changeDirectionProbabilty(greenTeam[i].uncertainty);
-            boolean towardCertainty = random.nextInt(1,101) <= directionProbability;
+            double directionProbaility = changeDirectionProbabilty( (int) greenTeam[i].uncertainty);
+            boolean towardCertainty = random.nextInt(1,101) <= directionProbaility;
 
             // toward uncertainty
             if (!towardCertainty) {

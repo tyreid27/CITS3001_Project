@@ -11,23 +11,52 @@ public class Game{
     // the day into the election campaign
     int day;
     // total number of agents in the game in total
-    int numAgents;
-    // number of green agents
     int nGreen;
     // number of grey agents
     int nGrey;
     // number of agents that are currently going to vote at the election
     int willVote;
     // our agents
-    ArrayList<GreyAgent> greyTeam;
-    ArrayList<GreenAgent> greenTeam;
+    GreenAgent[] greenTeam;
+    GreyAgent[] greyTeam;
     RedAgent redAgent;
     BlueAgent blueAgent;
+    // data structure for green team network
+    int[][] network;
 
-    public Game(int days){
+    /**
+     * constructor that creates a random network
+     * @param days the number of days the election runs for
+     * @param nGreen the number of green agents on the green team
+     * @param nGrey the number of grey agents on the grey team
+     * @param prob the probability of connection between two green agents
+     * @param prop the proportion of green agents initially voting / not voting
+     */
+    public Game(int days, int nGreen, int nGrey, int prob, int prop){
         this.daysToElection = days;
         // initialise array of green team members 
-        this.greenTeam = new ArrayList<GreenAgent>();
+        this.greenTeam = new GreenAgent[nGreen];
+        for(int i = 0; i < nGreen; i++)
+            greenTeam[i] = new GreenAgent();
+        // initialise the network
+        this.network = new int[nGreen][nGreen];
+        // make connections according to the prob
+        Random rand = new Random();
+        for(int i = 0; i < nGreen; i++){
+            for(int j = 0; j < nGreen; j++){
+                if(network[i][j] == 0){
+                    if(rand.nextInt(1,101) <= prob){
+                        network[i][j] = 2;
+                        network[j][i] = 2;
+                        greenTeam[i].connections.add(greenTeam[j]);
+                        greenTeam[j].connections.add(greenTeam[i]);
+                    } else {
+                        network[i][j] = 1;
+                        network[j][i] = 1;
+                    }
+                }
+            }
+        }
         this.redAgent = new RedAgent();
         this.blueAgent = new BlueAgent();
     }
@@ -35,15 +64,7 @@ public class Game{
     public void nextRound(){
         day++;
         System.out.println("day " + day);
-        //redAgent.redTurn(greenTeam);
-    }
-
-    public void addAgent(String info){
-        String[] columns = info.split(",");
-    }
-
-    public void newConnection(int id1, int id2){
-        // stuff here
+        redAgent.redTurn(greenTeam);
     }
 
     public void start(){
@@ -52,10 +73,14 @@ public class Game{
         }
         System.out.println("Game Over");
     }
+
+    public void addAgent(String info){
+        String[] columns = info.split(",");
+    }
     
     public static void main(String[] args){
         // create a new game
-        Game game = new Game(5);
+        Game game = new Game(5, 100, 10, 50, 50);
         // initialise all the agents
         try{
             File agents = new File("agents.csv");
