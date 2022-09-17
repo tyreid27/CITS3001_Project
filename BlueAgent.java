@@ -4,7 +4,6 @@ import java.util.*;
  */
 public class BlueAgent{
     // this agents unique id
-    int id;
     int energy;
 
     public BlueAgent() {

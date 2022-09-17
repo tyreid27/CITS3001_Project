@@ -9,7 +9,7 @@ public class GreenAgent {
     ArrayList<GreenAgent> connections;
     // true if the agent will be voting in the election, false otherwise
     boolean willVote;
-    // higher uncertainty means higher probability the agents opinion will change (-10 to 10)
+    // higher uncertainity means higher probability the agents opinion will change (-10 to 10)
     double uncertainty;
     // this agents unique id
     int id;

@@ -14,7 +14,7 @@ public class RedAgent {
     // calculate probaility of continuing with current voting direction
     public int changeDirectionProbabilty(int uncertainty) {
         int probability = 0;
-        if (uncertainty > 0 && uncertainty <= 1) {
+        if (uncertainty >= 0 && uncertainty <= 1) {
             probability = 95;
         }
         if (uncertainty > 1 && uncertainty <= 2) {
@@ -48,46 +48,39 @@ public class RedAgent {
     }
 
     public GreenAgent[] redTurn(GreenAgent[] greenTeam) {
-        Random rand = new Random();
-        Random random = new Random();
-        messagePotency = rand.nextDouble((2.5-0.5) + 0.5) + 0.5;
+        Random randMP = new Random();
+        Random randTC = new Random();
+        messagePotency = randMP.nextDouble((2.5-0.5) + 0.5) + 0.5;
         // loop through greenteam members and interact with them.
         for (int i = 0; i < greenTeam.length; i++) {
             double currentUncertainty = greenTeam[i].uncertainty;
              // uncertaintyChange calculated to change uncertainty by 0 - 2.5 based on current uncertainty level and message potency
             double uncertaintyChange = (currentUncertainty * messagePotency) / 10;
             double directionProbaility = changeDirectionProbabilty( (int) greenTeam[i].uncertainty);
-            boolean towardCertainty = random.nextInt(1,101) <= directionProbaility;
+            boolean towardCertainty = randTC.nextInt(1,101) <= directionProbaility;
 
             // toward uncertainty
             if (!towardCertainty) {
-                if (!greenTeam[i].willVote) {
-                    // if new uncertainty value becomes higher than 10, which indicates the agent now switches to willVote
-                    if ((greenTeam[i].uncertainty + uncertaintyChange) > 10) {
-                        // from red to blue team
-                        greenTeam[i].willVote = true;
-                        greenTeam[i].uncertainty = 10 - ((currentUncertainty + uncertaintyChange) - 10);
-                    } else {
-                        greenTeam[i].uncertainty = currentUncertainty + uncertaintyChange;
-                    }
-                }
-                else {
-                    if ((greenTeam[i].uncertainty + uncertaintyChange) > 10) {
-                        // from blue to red team
+                // if new uncertainty value becomes higher than 10, which indicates the agent now switches to willVote
+                if ((currentUncertainty + uncertaintyChange) > 10) {
+                    greenTeam[i].uncertainty = 10 - ((currentUncertainty + uncertaintyChange) - 10); 
+                    // If green agent was voting for blue, switch to red and vice versa
+                    if (greenTeam[i].willVote) {
                         greenTeam[i].willVote = false;
-                        greenTeam[i].uncertainty = 10 - ((currentUncertainty + uncertaintyChange) - 10);
                     } else {
-                        greenTeam[i].uncertainty = currentUncertainty + uncertaintyChange;
+                        greenTeam[i].willVote = true;
                     }
+                } else {
+                    greenTeam[i].uncertainty = currentUncertainty + uncertaintyChange;
                 }
             } 
-            // toward uncertainty
+            // toward certainty
             else {
-                if ((greenTeam[i].uncertainty - uncertaintyChange) < 0) {
+                if ((currentUncertainty - uncertaintyChange) < 0) {
                     greenTeam[i].uncertainty = 0;
                 }
                 else {
-                    greenTeam[i].uncertainty -= uncertaintyChange;
+                    greenTeam[i].uncertainty = currentUncertainty - uncertaintyChange;
                 }
             }
         }
