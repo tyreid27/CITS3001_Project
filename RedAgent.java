@@ -54,6 +54,9 @@ public class RedAgent {
         // loop through greenteam members and interact with them.
         for (int i = 0; i < greenTeam.length; i++) {
             double currentUncertainty = greenTeam[i].uncertainty;
+            if (currentUncertainty < 2.5 && greenTeam[i].willVote == true) {
+                continue;
+            }
              // uncertaintyChange calculated to change uncertainty by 0 - 2.5 based on current uncertainty level and message potency
             double uncertaintyChange = (currentUncertainty * messagePotency) / 10;
             double directionProbaility = changeDirectionProbabilty( (int) greenTeam[i].uncertainty);
@@ -61,6 +64,10 @@ public class RedAgent {
 
             // toward uncertainty
             if (!towardCertainty) {
+                // if they are sided with red team, only increase their uncertainty by only half compared to if they were sided with blue
+                if (!greenTeam[i].willVote) {
+                    uncertaintyChange = uncertaintyChange / 2;
+                }
                 // if new uncertainty value becomes higher than 10, which indicates the agent now switches to willVote
                 if ((currentUncertainty + uncertaintyChange) > 10) {
                     greenTeam[i].uncertainty = 10 - ((currentUncertainty + uncertaintyChange) - 10); 
@@ -76,6 +83,10 @@ public class RedAgent {
             } 
             // toward certainty
             else {
+                // if they are sided with blue team, only increase their certainty by only half compared to if they were sided with red
+                if (greenTeam[i].willVote) {
+                    uncertaintyChange = uncertaintyChange / 2;
+                }
                 if ((currentUncertainty - uncertaintyChange) < 0) {
                     greenTeam[i].uncertainty = 0;
                 }
