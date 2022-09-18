@@ -44,26 +44,28 @@ public class Game{
             greenTeam[i] = new GreenAgent(i);
         // initialise the network
         this.network = new int[nGreen][nGreen];
+        // array to keep track of which pairs of nodes connections have been decided
+        int[][] pairsConnected = new int[nGreen][nGreen];
         // make connections according to the prob
         Random rand = new Random();
         for(int i = 0; i < nGreen; i++){
             for(int j = 0; j < nGreen; j++){
-                if(network[i][j] == 0){
-                    if(rand.nextInt(1,101) <= prob){
-                        network[i][j] = 2;
-                        network[j][i] = 2;
-                        greenTeam[i].connections.add(greenTeam[j]);
-                        greenTeam[j].connections.add(greenTeam[i]);
-                    } else {
-                        network[i][j] = 1;
-                        network[j][i] = 1;
-                    }
+                if(rand.nextInt(1,101) <= prob && pairsConnected[i][j] == 0){
+                    network[i][j] = 1;
+                    network[j][i] = 1;
+                    greenTeam[i].connections.add(greenTeam[j]);
+                    greenTeam[j].connections.add(greenTeam[i]);
+                    pairsConnected[i][j] = 1;
+                    pairsConnected[j][i] = 1;
                 }
             }
         }
         this.redAgent = new RedAgent();
         this.blueAgent = new BlueAgent();
         this.day = 0;
+
+        System.out.println(network[7][3]);
+        System.out.println(network[3][7]);
     }
 
     /**
@@ -93,8 +95,8 @@ public class Game{
                 String row = scanner.nextLine();
                 int id1 = Integer.valueOf(row.split(",")[0]);
                 int id2 = Integer.valueOf(row.split(",")[1]);
-                network[id1][id2] = 2;
-                network[id2][id1] = 2;
+                network[id1][id2] = 1;
+                network[id2][id1] = 1;
                 greenTeam[id1].connections.add(greenTeam[id2]);
                 greenTeam[id2].connections.add(greenTeam[id1]);
             }  
