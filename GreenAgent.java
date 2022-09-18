@@ -13,6 +13,8 @@ public class GreenAgent {
     double uncertainty;
     // this agents unique id
     int id;
+    // determines if the red team has 'lost' this green agent, i.e. if false red can no longer communicate
+    boolean canRedCommunicate;
     
     /**
      * constructor for green agent. Manually set the default parameters.
@@ -23,6 +25,7 @@ public class GreenAgent {
         this.connections = new ArrayList<GreenAgent>();
         this.willVote = willVote;
         this.id = id;
+        this.canRedCommunicate = true;
         if(uncertainty <= 10 && uncertainty >= -10){
             this.uncertainty = uncertainty;
         } else{
@@ -42,5 +45,6 @@ public class GreenAgent {
         // choose int between 0 and 21 for range -10 to 10
         this.uncertainty = rand.nextInt(21) - 10;
         this.id = id;
+        this.canRedCommunicate = true;
      }
 }
