@@ -11,55 +11,29 @@ public class RedAgent {
         this.messagePotency = 0.0;
     }
 
-    // calculate probaility of continuing with current voting direction
-    public int changeDirectionProbabilty(int uncertainty) {
-        int probability = 0;
-        if (uncertainty >= 0 && uncertainty <= 1) {
-            probability = 95;
-        }
-        if (uncertainty > 1 && uncertainty <= 2) {
-            probability = 90;
-        }
-        if (uncertainty > 2 && uncertainty <= 3) {
-            probability = 85;
-        }
-        if (uncertainty > 3 && uncertainty <= 4) {
-            probability = 80;
-        }
-        if (uncertainty > 4 && uncertainty <= 5) {
-            probability = 75;
-        }
-        if (uncertainty > 5 && uncertainty <= 6) {
-            probability = 70;
-        }
-        if (uncertainty > 6 && uncertainty <= 7) {
-            probability = 65;
-        }
-        if (uncertainty > 7 && uncertainty <= 8) {
-            probability = 60;
-        }
-        if (uncertainty > 8 && uncertainty <= 9) {
-            probability = 55;
-        }
-        if (uncertainty > 9 && uncertainty <= 10) {
-            probability = 50;
-        }
-        return probability;
-    }
-
     public GreenAgent[] redTurn(GreenAgent[] greenTeam) {
         Random randMP = new Random();
+        Random randLF = new Random();
         Random randTC = new Random();
         messagePotency = randMP.nextDouble((2.5-0.5) + 0.5) + 0.5;
         // loop through greenteam members and interact with them.
         for (int i = 0; i < greenTeam.length; i++) {
-            double currentUncertainty = greenTeam[i].uncertainty;
-            if (currentUncertainty < 2.5 && greenTeam[i].willVote == true) {
+            if (!greenTeam[i].canRedCommunicate) {
                 continue;
             }
+            double currentUncertainty = greenTeam[i].uncertainty;
+            double lostFollowerProbability = GameLibrary.lossFollowerProbability( (int) currentUncertainty);
+            boolean lostFollower = randLF.nextInt(1,101) <= lostFollowerProbability;
+
+            // code to see if follower is lost.
+            if (lostFollower) {
+                greenTeam[i].canRedCommunicate = false;
+                continue;
+            }
+
              // uncertaintyChange calculated to change uncertainty by 0 - 2.5 based on current uncertainty level and message potency
             double uncertaintyChange = (currentUncertainty * messagePotency) / 10;
-            double directionProbaility = changeDirectionProbabilty( (int) greenTeam[i].uncertainty);
+            double directionProbaility = GameLibrary.changeDirectionProbabilty( (int) currentUncertainty);
             boolean towardCertainty = randTC.nextInt(1,101) <= directionProbaility;
 
             // toward uncertainty
