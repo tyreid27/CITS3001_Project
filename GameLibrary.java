@@ -35,4 +35,24 @@ public class GameLibrary {
         }
         return probability;
     }
+
+    public static int loseFollowerProbability(int uncertainty) {
+        int probability = 0;
+        if (uncertainty >= 0 && unceratinty <= 1) {
+            probability = 50;
+        }
+        if (uncertainty > 1 && unceratinty <= 2) {
+            probability = 40;
+        }
+        if (uncertainty > 2 && unceratinty <= 3) {
+            probability = 30;
+        }
+        if (uncertainty > 3 && unceratinty <= 4) {
+            probability = 20;
+        }
+        if (uncertainty > 4 && unceratinty <= 5) {
+            probability = 10;
+        }
+        return probability;
+    }
 }
