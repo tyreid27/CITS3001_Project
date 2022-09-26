@@ -9,7 +9,7 @@ public class BlueAgent{
     int numGainedVoters;
 
     public BlueAgent() {
-        this.energy = 100;
+        this.energy = 20;
         this.certainty = 0;
         this.numGainedVoters = 0;
     }
@@ -20,9 +20,10 @@ public class BlueAgent{
         certainty = randC.nextInt((5-1) + 1) + 1;
         for (int i = 0; i < greenTeam.length; i++) {
             // Every time blue gains 5 voters they gain 1 energy
-            if (numGainedVoters == 5) {
+            if (numGainedVoters == 2) {
                 energy += 1;
                 numGainedVoters = 0;
+                System.out.println("Blue has gained an energy!");
             }
             double currentUncertainty = greenTeam[i].uncertainty;
             // uncertaintyChange calculated to change uncertainty by 0 - 2.5 based on current uncertainty level and message potency
