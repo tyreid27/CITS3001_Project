@@ -23,7 +23,7 @@ public class RedAgent {
                 continue;
             }
             double currentUncertainty = greenTeam[i].uncertainty;
-            double lostFollowerProbability = GameLibrary.loseFollowerProbability( (int) currentUncertainty);
+            double lostFollowerProbability = GameLibrary.loseFollowerProbability( (int) currentUncertainty, messagePotency);
             boolean lostFollower = randLF.nextInt(1,101) <= lostFollowerProbability;
 
             if (greenTeam[i].willVote) {

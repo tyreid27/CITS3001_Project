@@ -105,7 +105,7 @@ public class Game{
 
     public void nextRound(){
         day++;
-        System.out.println("day " + day);
+        System.out.println("Day " + day);
         redAgent.redTurn(greenTeam);
         blueAgent.blueTurn(greenTeam);
     }
