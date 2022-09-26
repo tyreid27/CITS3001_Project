@@ -43,7 +43,7 @@ public class GreenAgent {
         // randomly choose True or False
         this.willVote = rand.nextBoolean();
         // choose int between 0 and 21 for range -10 to 10
-        this.uncertainty = rand.nextInt(21) - 10;
+        this.uncertainty = rand.nextInt((10-0) + 1) + 0;
         this.id = id;
         this.canRedCommunicate = true;
      }

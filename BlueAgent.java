@@ -20,7 +20,7 @@ public class BlueAgent{
         certainty = randC.nextInt((5-1) + 1) + 1;
         for (int i = 0; i < greenTeam.length; i++) {
             // Every time blue gains 5 voters they gain 1 energy
-            if (numGainedVoters == 2) {
+            if (numGainedVoters == 3) {
                 energy += 1;
                 numGainedVoters = 0;
                 System.out.println("Blue has gained an energy!");
