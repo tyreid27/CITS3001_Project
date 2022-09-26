@@ -5,7 +5,7 @@ import java.util.*;
 public class BlueAgent{
     // this agents unique id
     int energy;
-    double certainty; // certainty of the blue team message
+    int certainty; // certainty of the blue team message
     int numGainedVoters;
 
     public BlueAgent() {
@@ -17,7 +17,7 @@ public class BlueAgent{
     public GreenAgent[] blueTurn(GreenAgent[] greenTeam) {
         Random randC = new Random();
         Random randTC = new Random();
-        certainty = randC.nextDouble((2.5-0.5) + 0.5) + 0.5;
+        certainty = randC.nextInt((5-1) + 1) + 1;
         for (int i = 0; i < greenTeam.length; i++) {
             // Every time blue gains 5 voters they gain 1 energy
             if (numGainedVoters == 5) {
@@ -26,7 +26,7 @@ public class BlueAgent{
             }
             double currentUncertainty = greenTeam[i].uncertainty;
             // uncertaintyChange calculated to change uncertainty by 0 - 2.5 based on current uncertainty level and message potency
-            double uncertaintyChange = (currentUncertainty * certainty) / 10;
+            double uncertaintyChange = (currentUncertainty * (certainty / 2)) / 10;
             double directionProbaility = GameLibrary.changeDirectionProbabilty( (int) greenTeam[i].uncertainty);
             boolean towardCertainty = randTC.nextInt(1,101) <= directionProbaility;
 
@@ -65,6 +65,14 @@ public class BlueAgent{
             }
         }
         energy -= certainty;
+        System.out.println("Blue Teams Turn");
+        System.out.println("Sent out a certainty value of " + certainty);
+        System.out.println("Energy Left: " + energy + "\n");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return greenTeam;
     }
 }

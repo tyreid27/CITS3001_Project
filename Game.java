@@ -2,7 +2,7 @@ import java.util.*;
 import java.io.*;  
 /**
  * This is the class to call to start the game
- * Compile with "javac Game.java GreenAgent.java RedAgent.java GreyAgent.java"
+ * Compile with "javac Game.java GreenAgent.java RedAgent.java BlueAgent.java GreyAgent.java GameLibrary.java"
  * Run with "java Game"
  */
 public class Game{
@@ -10,12 +10,6 @@ public class Game{
     int daysToElection;
     // the day into the election campaign
     int day;
-    // total number of agents in the game in total
-    int nGreen;
-    // number of grey agents
-    int nGrey;
-    // number of agents that are currently going to vote at the election
-    int willVote;
     // our agents
     GreenAgent[] greenTeam;
     GreyAgent[] greyTeam;
@@ -64,8 +58,8 @@ public class Game{
         this.blueAgent = new BlueAgent();
         this.day = 0;
 
-        System.out.println(network[7][3]);
-        System.out.println(network[3][7]);
+        //System.out.println(network[7][3]);
+        //System.out.println(network[3][7]);
     }
 
     /**
@@ -113,13 +107,36 @@ public class Game{
         day++;
         System.out.println("day " + day);
         redAgent.redTurn(greenTeam);
+        blueAgent.blueTurn(greenTeam);
     }
 
     public void start(){
         while(day != daysToElection){
+            if (blueAgent.energy <= 0) {
+                break;
+            }
             nextRound();
         }
         System.out.println("Game Over");
+    }
+
+    // Function to add up the total amount of votes and declare a winner
+    public void end(){
+        int totalVoters = 0;
+        for (int i = 0; i < greenTeam.length; i++){
+            if (greenTeam[i].willVote) {
+                totalVoters++;
+            }
+        }
+        if (((double)totalVoters / greenTeam.length) > 0.5){
+            System.out.println("Blue Team Wins!");
+        }
+        else if (((double)totalVoters / greenTeam.length) < 0.5){
+            System.out.println("Red Team Wins");
+        }
+        else {
+            System.out.println("Game is a draw");
+        }
     }
 
     public void addAgent(String info){
@@ -150,6 +167,7 @@ public class Game{
             game.start();
         else
             System.out.println("something went wrong");
+        game.end();
     }
 }
 
