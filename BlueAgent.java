@@ -19,7 +19,7 @@ public class BlueAgent{
         Random randTC = new Random();
         certainty = randC.nextInt((5-1) + 1) + 1;
         for (int i = 0; i < greenTeam.length; i++) {
-            // Every time blue gains 5 voters they gain 1 energy
+            // Every time blue gains 3 voters they gain 1 energy
             if (numGainedVoters == 3) {
                 energy += 1;
                 numGainedVoters = 0;
@@ -69,11 +69,11 @@ public class BlueAgent{
         System.out.println("Blue Teams Turn");
         System.out.println("Sent out a certainty value of " + certainty);
         System.out.println("Energy Left: " + energy + "\n");
-        try {
+        /*try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
         return greenTeam;
     }
 }
