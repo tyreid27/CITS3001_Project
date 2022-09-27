@@ -11,7 +11,7 @@ public class RedAgent {
         this.messagePotency = 0;
     }
 
-    public GreenAgent[] redTurn(GreenAgent[] greenTeam) {
+    public GreenAgent[] redTurn(GreenAgent[] greenTeam, boolean isGreyAgent) {
         Random randMP = new Random();
         Random randLF = new Random();
         Random randTC = new Random();
@@ -23,15 +23,17 @@ public class RedAgent {
                 continue;
             }
             double currentUncertainty = greenTeam[i].uncertainty;
-            double lostFollowerProbability = GameLibrary.loseFollowerProbability( (int) currentUncertainty, messagePotency);
-            boolean lostFollower = randLF.nextInt(1,101) <= lostFollowerProbability;
+            if (!isGreyAgent) {
+                double lostFollowerProbability = GameLibrary.loseFollowerProbability( (int) currentUncertainty, messagePotency);
+                boolean lostFollower = randLF.nextInt(1,101) <= lostFollowerProbability;
 
-            if (greenTeam[i].willVote) {
-                // code to see if follower is lost.
-                if (lostFollower) {
-                    greenTeam[i].canRedCommunicate = false;
-                    followersLost++;
-                    continue;
+                if (greenTeam[i].willVote ) {
+                    // code to see if follower is lost.
+                    if (lostFollower) {
+                        greenTeam[i].canRedCommunicate = false;
+                        followersLost++;
+                        continue;
+                    }
                 }
             }
 
