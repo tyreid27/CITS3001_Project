@@ -44,6 +44,7 @@ public class Game{
         Random rand = new Random();
         for(int i = 0; i < nGreen; i++){
             for(int j = 0; j < nGreen; j++){
+                // generate a number between 1 and 4 based on proportions of level of connections
                 if(rand.nextInt(1,101) <= prob && pairsConnected[i][j] == 0){
                     network[i][j] = 1;
                     network[j][i] = 1;

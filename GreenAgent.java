@@ -31,7 +31,7 @@ public class GreenAgent {
         } else{
             this.uncertainty = 0;
         }
-        //????? this doesnt work yet
+        //incomplete constructor
     }
 
     /**
@@ -40,11 +40,37 @@ public class GreenAgent {
      public GreenAgent(int id){
         this.connections = new ArrayList<GreenAgent>();
         Random rand = new Random();
-        // randomly choose True or False
-        this.willVote = rand.nextBoolean();
+        // exactly 50% of green agents start voting
+        if(id % 2 == 0)
+            willVote = true;
+        else
+            willVote = false;
         // choose int between 0 and 21 for range -10 to 10
-        this.uncertainty = rand.nextInt((10-0) + 1) + 0;
+        this.uncertainty = 5;//rand.nextDouble(11);
         this.id = id;
         this.canRedCommunicate = true;
+     }
+
+     public void interact(GreenAgent a, GreenAgent b, int level)
+
+     public void greenTurn(GreenAgent[] greenTeam, int[][] network){
+
+        for(int i = 0; i < greenTeam.length; i++){
+            for(int j = 0; j < greenTeam.length; j++){
+                switch([network[i][j]]){
+                    case 1:
+                        
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                    case 4:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
      }
 }
