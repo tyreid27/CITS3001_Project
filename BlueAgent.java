@@ -9,7 +9,7 @@ public class BlueAgent{
     int numGainedVoters;
 
     public BlueAgent() {
-        this.energy = 20;
+        this.energy = 1000;
         this.certainty = 0;
         this.numGainedVoters = 0;
     }
@@ -70,7 +70,7 @@ public class BlueAgent{
         System.out.println("Sent out a certainty value of " + certainty);
         System.out.println("Energy Left: " + energy + "\n");
         try {
-            Thread.sleep(2000);
+            Thread.sleep(0);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
