@@ -11,7 +11,7 @@ public class RedAgent {
         this.messagePotency = 0;
     }
 
-    public GreenAgent[] redTurn(GreenAgent[] greenTeam) {
+    public GreenAgent[] redTurn(GreenAgent[] greenTeam, boolean isGreyAgent) {
         Random randMP = new Random();
         Random randLF = new Random();
         Random randTC = new Random();
@@ -23,15 +23,17 @@ public class RedAgent {
                 continue;
             }
             double currentUncertainty = greenTeam[i].uncertainty;
-            double lostFollowerProbability = GameLibrary.loseFollowerProbability( (int) currentUncertainty, messagePotency);
-            boolean lostFollower = randLF.nextInt(1,101) <= lostFollowerProbability;
+            if (!isGreyAgent) {
+                double lostFollowerProbability = GameLibrary.loseFollowerProbability( (int) currentUncertainty, messagePotency);
+                boolean lostFollower = randLF.nextInt(1,101) <= lostFollowerProbability;
 
-            if (greenTeam[i].willVote) {
-                // code to see if follower is lost.
-                if (lostFollower) {
-                    greenTeam[i].canRedCommunicate = false;
-                    followersLost++;
-                    continue;
+                if (greenTeam[i].willVote ) {
+                    // code to see if follower is lost.
+                    if (lostFollower) {
+                        greenTeam[i].canRedCommunicate = false;
+                        followersLost++;
+                        continue;
+                    }
                 }
             }
 
@@ -48,7 +50,7 @@ public class RedAgent {
                 }
                 // if new uncertainty value becomes higher than 10, which indicates the agent now switches to willVote
                 if ((currentUncertainty + uncertaintyChange) > 10) {
-                    greenTeam[i].uncertainty = 10 - ((currentUncertainty + uncertaintyChange) - 10); 
+                    greenTeam[i].uncertainty = 10 - ((currentUncertainty + uncertaintyChange) - 10);
                     // If green agent was voting for blue, switch to red and vice versa
                     if (greenTeam[i].willVote) {
                         greenTeam[i].willVote = false;
@@ -76,11 +78,12 @@ public class RedAgent {
         System.out.println("Red Teams Turn");
         System.out.println("Sent out a Potency value of " + messagePotency);
         System.out.println("Followers lost this round: " + followersLost + "\n");
+        /*
         try {
             Thread.sleep(0);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
         return greenTeam;
     }
 }

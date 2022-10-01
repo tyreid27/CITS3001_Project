@@ -7,19 +7,28 @@ public class BlueAgent{
     int energy;
     int certainty; // certainty of the blue team message
     int numGainedVoters;
+    //GreyAgent greyAgent;
 
     public BlueAgent() {
-        this.energy = 1000;
+        this.energy = 100;
         this.certainty = 0;
         this.numGainedVoters = 0;
+        //this.greyAgent = new GreyAgent();
     }
 
-    public GreenAgent[] blueTurn(GreenAgent[] greenTeam) {
+    public GreenAgent[] blueTurn(GreenAgent[] greenTeam, boolean isGreyAgent) {
+        Random randGA = new Random();
+        boolean useGreyAgent = randGA.nextInt(1,101) <= 20;
+        if (useGreyAgent) {
+            System.out.println("Blue Teams Turn");
+            System.out.println("Using Grey Agent");
+            //return greyAgent.greyTurn(greenTeam);
+        }
         Random randC = new Random();
         Random randTC = new Random();
         certainty = randC.nextInt((5-1) + 1) + 1;
         for (int i = 0; i < greenTeam.length; i++) {
-            // Every time blue gains 5 voters they gain 1 energy
+            // Every time blue gains 3 voters they gain 1 energy
             if (numGainedVoters == 3) {
                 energy += 1;
                 numGainedVoters = 0;
@@ -35,7 +44,7 @@ public class BlueAgent{
             if (!towardCertainty) {
                 // if they are sided with blue team, only increase their uncertainty by only three quaters of the red team value
                 if (greenTeam[i].willVote) {
-                    uncertaintyChange = uncertaintyChange * (6 / 8);
+                    uncertaintyChange = uncertaintyChange * 0.75;  
                 }
                 // if new uncertainty value becomes higher than 10, which indicates the agent now switches to willVote
                 if ((currentUncertainty + uncertaintyChange) > 10) {
@@ -55,7 +64,7 @@ public class BlueAgent{
             else {
                 // if they are sided with red team, only increase their certainty by only three quarters compared to the blue value
                 if (!greenTeam[i].willVote) {
-                    uncertaintyChange = uncertaintyChange * (6 / 8);
+                    uncertaintyChange = uncertaintyChange * 0.75;
                 }
                 if ((currentUncertainty - uncertaintyChange) < 0) {
                     greenTeam[i].uncertainty = 0;
@@ -64,16 +73,19 @@ public class BlueAgent{
                     greenTeam[i].uncertainty = currentUncertainty - uncertaintyChange;
                 }
             }
+
         }
-        energy -= certainty;
+        //if (!isGreyAgent) {
+            energy -= certainty;
+        //}
         System.out.println("Blue Teams Turn");
         System.out.println("Sent out a certainty value of " + certainty);
         System.out.println("Energy Left: " + energy + "\n");
-        try {
-            Thread.sleep(0);
+        /*try {
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
         return greenTeam;
     }
 }
