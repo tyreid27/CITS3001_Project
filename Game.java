@@ -31,7 +31,11 @@ public class Game{
         // initialise array of grey team members
         this.greyTeam = new GreyAgent[nGrey];
         for(int i = 0; i < nGrey; i++)
-            greyTeam[i] = new GreyAgent(i);
+            if (i % 3 == 0) {
+                greyTeam[i] = new GreyAgent(i, 1);
+            } else {
+                greyTeam[i] = new GreyAgent(i, 0);
+            }
         // initialise array of green team members 
         this.greenTeam = new GreenAgent[nGreen];
         for(int i = 0; i < nGreen; i++)
@@ -75,7 +79,11 @@ public class Game{
         // initialise array of grey team members
         this.greyTeam = new GreyAgent[nGrey];
         for(int i = 0; i < nGrey; i++)
-            greyTeam[i] = new GreyAgent(i);
+            if (i % 3 == 0) {
+                greyTeam[i] = new GreyAgent(i, 1);
+            } else {
+                greyTeam[i] = new GreyAgent(i, 0);
+            }
         // init array of green team members
         this.greenTeam = new GreenAgent[nGreen];
         for(int i = 0; i < nGreen; i++)
@@ -93,7 +101,7 @@ public class Game{
                 network[id2][id1] = 1;
                 greenTeam[id1].connections.add(greenTeam[id2]);
                 greenTeam[id2].connections.add(greenTeam[id1]);
-            }  
+            } 
             scanner.close();
         } catch(IOException e) {  
             e.printStackTrace();  
@@ -107,7 +115,7 @@ public class Game{
         day++;
         System.out.println("Day " + day);
         redAgent.redTurn(greenTeam);
-        blueAgent.blueTurn(greenTeam);
+        blueAgent.blueTurn(greenTeam, greyTeam);
     }
 
     public void start(){

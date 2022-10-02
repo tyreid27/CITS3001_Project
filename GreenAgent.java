@@ -42,8 +42,9 @@ public class GreenAgent {
         Random rand = new Random();
         // randomly choose True or False
         this.willVote = rand.nextBoolean();
-        // choose int between 0 and 21 for range -10 to 10
-        this.uncertainty = rand.nextInt((10-0) + 1) + 0;
+        // choose int between 0 to 10
+        // Maybe change to 0-5 to make green agents more neutral in the start of the game
+        this.uncertainty = rand.nextInt((10-5) + 1) + 5;
         this.id = id;
         this.canRedCommunicate = true;
      }

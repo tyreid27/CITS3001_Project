@@ -6,16 +6,16 @@ import java.util.*;
 public class RedAgent {
     // potency of message
     int messagePotency;
+    int totalFollowersLost;
 
     public RedAgent() {
         this.messagePotency = 0;
+        this.totalFollowersLost = 0;
     }
 
-    public GreenAgent[] redTurn(GreenAgent[] greenTeam, boolean isGreyAgent) {
-        Random randMP = new Random();
-        Random randLF = new Random();
-        Random randTC = new Random();
-        messagePotency = randMP.nextInt((5-1) + 1) + 1;
+    public GreenAgent[] redTurn(GreenAgent[] greenTeam) {
+        Random rand = new Random();
+        messagePotency = rand.nextInt((5-1) + 1) + 1;
         int followersLost = 0;
         // loop through greenteam members and interact with them.
         for (int i = 0; i < greenTeam.length; i++) {
@@ -23,24 +23,22 @@ public class RedAgent {
                 continue;
             }
             double currentUncertainty = greenTeam[i].uncertainty;
-            if (!isGreyAgent) {
-                double lostFollowerProbability = GameLibrary.loseFollowerProbability( (int) currentUncertainty, messagePotency);
-                boolean lostFollower = randLF.nextInt(1,101) <= lostFollowerProbability;
+            double lostFollowerProbability = GameLibrary.loseFollowerProbability( (int) currentUncertainty, messagePotency);
+            boolean lostFollower = rand.nextInt(1,101) <= lostFollowerProbability;
 
-                if (greenTeam[i].willVote ) {
-                    // code to see if follower is lost.
-                    if (lostFollower) {
-                        greenTeam[i].canRedCommunicate = false;
-                        followersLost++;
-                        continue;
-                    }
+            if (greenTeam[i].willVote ) {
+                // code to see if follower is lost.
+                if (lostFollower) {
+                    greenTeam[i].canRedCommunicate = false;
+                    followersLost++;
+                    continue;
                 }
             }
-
+            
              // uncertaintyChange calculated to change uncertainty by 0 - 2.5 based on current uncertainty level and message potency
             double uncertaintyChange = (currentUncertainty * (messagePotency / 2)) / 10;
             double directionProbaility = GameLibrary.changeDirectionProbabilty( (int) currentUncertainty);
-            boolean towardCertainty = randTC.nextInt(1,101) <= directionProbaility;
+            boolean towardCertainty = rand.nextInt(1,101) <= directionProbaility;
 
             // toward uncertainty
             if (!towardCertainty) {
@@ -58,7 +56,7 @@ public class RedAgent {
                         greenTeam[i].willVote = true;
                     }
                 } else {
-                    greenTeam[i].uncertainty = currentUncertainty + uncertaintyChange;
+                    greenTeam[i].uncertainty += uncertaintyChange;
                 }
             } 
             // toward certainty
@@ -71,10 +69,11 @@ public class RedAgent {
                     greenTeam[i].uncertainty = 0;
                 }
                 else {
-                    greenTeam[i].uncertainty = currentUncertainty - uncertaintyChange;
+                    greenTeam[i].uncertainty -= uncertaintyChange;
                 }
             }
         }
+        totalFollowersLost += followersLost;
         System.out.println("Red Teams Turn");
         System.out.println("Sent out a Potency value of " + messagePotency);
         System.out.println("Followers lost this round: " + followersLost + "\n");

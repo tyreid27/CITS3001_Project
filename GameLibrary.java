@@ -39,7 +39,7 @@ public class GameLibrary {
     public static int loseFollowerProbability(int uncertainty, int messagePotency) {
         int probability = 0;
         if (uncertainty >= 0 && uncertainty <= 1) {
-            probability = 10 * messagePotency ;
+            probability = 10 * messagePotency;
         }
         if (uncertainty > 1 && uncertainty <= 2) {
             probability = 8 * messagePotency;
