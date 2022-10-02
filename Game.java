@@ -48,9 +48,11 @@ public class Game{
         Random rand = new Random();
         for(int i = 0; i < nGreen; i++){
             for(int j = 0; j < nGreen; j++){
+                // generate a number between 1 and 4 for level of connections
+                int level = rand.nextInt(1, 5);
                 if(rand.nextInt(1,101) <= prob && pairsConnected[i][j] == 0){
-                    network[i][j] = 1;
-                    network[j][i] = 1;
+                    network[i][j] = level;
+                    network[j][i] = level;
                     greenTeam[i].connections.add(greenTeam[j]);
                     greenTeam[j].connections.add(greenTeam[i]);
                     pairsConnected[i][j] = 1;
@@ -114,8 +116,9 @@ public class Game{
     public void nextRound(){
         day++;
         System.out.println("Day " + day);
-        redAgent.redTurn(greenTeam);
-        blueAgent.blueTurn(greenTeam, greyTeam);
+        redAgent.redTurn(greenTeam, false);
+        blueAgent.blueTurn(greenTeam, false);
+        GreenAgent.greenTurn(greenTeam, network);
     }
 
     public void start(){

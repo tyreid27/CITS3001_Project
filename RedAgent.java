@@ -33,7 +33,6 @@ public class RedAgent {
                     followersLost++;
                     continue;
                 }
-            }
             
              // uncertaintyChange calculated to change uncertainty by 0 - 2.5 based on current uncertainty level and message potency
             double uncertaintyChange = (currentUncertainty * (messagePotency / 2)) / 10;
@@ -79,7 +78,7 @@ public class RedAgent {
         System.out.println("Followers lost this round: " + followersLost + "\n");
         /*
         try {
-            Thread.sleep(2000);
+            Thread.sleep(0);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }*/
