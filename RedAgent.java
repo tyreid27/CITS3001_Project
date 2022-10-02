@@ -13,7 +13,7 @@ public class RedAgent {
         this.totalFollowersLost = 0;
     }
 
-    public GreenAgent[] redTurn(GreenAgent[] greenTeam) {
+    public void redTurn(GreenAgent[] greenTeam) {
         Random rand = new Random();
         messagePotency = rand.nextInt((5-1) + 1) + 1;
         int followersLost = 0;
@@ -71,8 +71,9 @@ public class RedAgent {
                     greenTeam[i].uncertainty -= uncertaintyChange;
                 }
             }
-        }
+            }
         totalFollowersLost += followersLost;
+        }
         System.out.println("Red Teams Turn");
         System.out.println("Sent out a Potency value of " + messagePotency);
         System.out.println("Followers lost this round: " + followersLost + "\n");
@@ -82,6 +83,6 @@ public class RedAgent {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }*/
-        return greenTeam;
+        
     }
 }

@@ -61,7 +61,7 @@ public class GreyAgent{
                 if (!greenTeam[i].willVote && worksFor == 0) {
                     uncertaintyChange = uncertaintyChange * 0.75;
                 }
-                if (greenTeam[i].willVote && worksFor == 0) {
+                if (greenTeam[i].willVote && worksFor == 1) {
                     uncertaintyChange = uncertaintyChange / 2;
                 }
                 if ((currentUncertainty - uncertaintyChange) < 0) {

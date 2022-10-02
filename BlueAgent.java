@@ -14,14 +14,14 @@ public class BlueAgent{
         this.numGainedVoters = 0;
     }
 
-    public GreenAgent[] blueTurn(GreenAgent[] greenTeam, GreyAgent[] greyTeam) {
+    public void blueTurn(GreenAgent[] greenTeam, GreyAgent[] greyTeam) {
         Random rand = new Random();
         boolean useGreyAgent = rand.nextInt(1,101) <= 20;
         if (useGreyAgent) {
             int selectedAgent = rand.nextInt(greyTeam.length);
             System.out.println("Blue Teams Turn");
             System.out.println("Using Grey Agent");
-            return greyTeam[selectedAgent].greyTurn(greenTeam);
+            greyTeam[selectedAgent].greyTurn(greenTeam);
         }
         certainty = rand.nextInt((5-1) + 1) + 1;
         for (int i = 0; i < greenTeam.length; i++) {
@@ -81,6 +81,5 @@ public class BlueAgent{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }*/
-        return greenTeam;
     }
 }
