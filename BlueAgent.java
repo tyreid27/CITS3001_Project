@@ -78,9 +78,9 @@ public class BlueAgent{
         //if (!isGreyAgent) {
             energy -= certainty;
         //}
-        System.out.println("Blue Teams Turn");
-        System.out.println("Sent out a certainty value of " + certainty);
-        System.out.println("Energy Left: " + energy + "\n");
+        //System.out.println("Blue Teams Turn");
+        //System.out.println("Sent out a certainty value of " + certainty);
+        //System.out.println("Energy Left: " + energy + "\n");
         /*try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {

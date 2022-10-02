@@ -75,9 +75,9 @@ public class RedAgent {
                 }
             }
         }
-        System.out.println("Red Teams Turn");
-        System.out.println("Sent out a Potency value of " + messagePotency);
-        System.out.println("Followers lost this round: " + followersLost + "\n");
+        //System.out.println("Red Teams Turn");
+        //System.out.println("Sent out a Potency value of " + messagePotency);
+        //System.out.println("Followers lost this round: " + followersLost + "\n");
         /*
         try {
             Thread.sleep(0);
