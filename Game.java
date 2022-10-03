@@ -61,7 +61,7 @@ public class Game{
             }
         }
         this.redAgent = new RedAgent();
-        this.blueAgent = new BlueAgent();
+        this.blueAgent = new BlueAgent((days / 2) * 5);
         this.day = 0;
 
         //System.out.println(network[7][3]);
@@ -109,7 +109,7 @@ public class Game{
             e.printStackTrace();  
         }
         this.redAgent = new RedAgent();
-        this.blueAgent = new BlueAgent();
+        this.blueAgent = new BlueAgent((days / 2) * 5);
         this.day = 0;
     }
 
@@ -117,15 +117,14 @@ public class Game{
         day++;
         System.out.println("Day " + day);
         redAgent.redTurn(greenTeam);
-        blueAgent.blueTurn(greenTeam, greyTeam);
+        if (blueAgent.energy > 0) {
+            blueAgent.blueTurn(greenTeam, greyTeam);
+        }
         GreenAgent.greenTurn(greenTeam, network);
     }
 
     public void start(){
         while(day != daysToElection){
-            if (blueAgent.energy <= 0) {
-                break;
-            }
             nextRound();
         }
         System.out.println("Game Over");

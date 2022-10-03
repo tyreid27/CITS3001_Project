@@ -46,7 +46,7 @@ public class GreenAgent {
         else
             willVote = false;
         // choose int between 0 and 10
-        this.uncertainty = rand.nextDouble(10);
+        this.uncertainty = rand.nextDouble(2.5, 7.5);
         this.id = id;
         this.canRedCommunicate = true;
      }
@@ -63,7 +63,7 @@ public class GreenAgent {
                     // System.out.println("will " + i + " vote: " + greenTeam[i].willVote);
                     // System.out.println("uncertainty of " + j + ": " + greenTeam[j].uncertainty);
                     // System.out.println("will " + j + " vote: " + greenTeam[j].willVote);
-                    // if the uncertainty of i is less than j then i influences j
+                    //if the uncertainty of i is less than j then i influences j
                     if(greenTeam[i].uncertainty < greenTeam[j].uncertainty){
                         if(greenTeam[i].willVote != greenTeam[j].willVote){
                             greenTeam[j].willVote = greenTeam[i].willVote;
@@ -71,7 +71,8 @@ public class GreenAgent {
                             double swing = greenTeam[i].uncertainty + (((10.0 - greenTeam[i].uncertainty) + (10.0 - greenTeam[j].uncertainty)) / 2);
                             double diff = swing - greenTeam[i].uncertainty;
                             double bonus = diff * (network[i][j]/10.0);
-                            //System.out.println("Updated uncertainty of " + j + ": " + (swing - bonus));
+                            // System.out.println("Updated uncertainty of " + j + ": " + (swing - bonus));
+                            // System.out.println("Updated Vote: " + greenTeam[j].willVote);
                             greenTeam[j].uncertainty = swing - bonus;
                         }
                         else{
@@ -79,7 +80,8 @@ public class GreenAgent {
                             double difference = greenTeam[j].uncertainty - greenTeam[i].uncertainty;
                             double multiplier = (network[i][j]/10.0);
                             double change = difference * multiplier;
-                            //System.out.println("Updated uncertainty of " + j + ": " + (greenTeam[j].uncertainty - change));
+                            // System.out.println("Updated uncertainty of " + j + ": " + (greenTeam[j].uncertainty - change));
+                            // System.out.println("Updated Vote: " + greenTeam[j].willVote);
                             greenTeam[j].uncertainty = greenTeam[j].uncertainty - change;
                         }
                     }

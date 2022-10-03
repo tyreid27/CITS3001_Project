@@ -7,63 +7,62 @@ public class RedAgent {
     // potency of message
     int messagePotency;
     int totalFollowersLost;
+    int previousTurn;
+    int previousPreviousTurn;
 
     public RedAgent() {
         this.messagePotency = 0;
         this.totalFollowersLost = 0;
+        this.previousTurn = 0;
+        this.previousPreviousTurn = 0;
     }
 
     public void redTurn(GreenAgent[] greenTeam) {
         Random rand = new Random();
         messagePotency = rand.nextInt((5-1) + 1) + 1;
         int followersLost = 0;
+        boolean willLose = false; // boolean to have so that only every second follower is lost when message potency is high.
         // loop through greenteam members and interact with them.
         for (int i = 0; i < greenTeam.length; i++) {
             if (!greenTeam[i].canRedCommunicate) {
                 continue;
             }
             double currentUncertainty = greenTeam[i].uncertainty;
-            double lostFollowerProbability = GameLibrary.loseFollowerProbability( (int) currentUncertainty, messagePotency);
-            boolean lostFollower = rand.nextInt(1,101) <= lostFollowerProbability;
-
-            if (greenTeam[i].willVote ) {
-                // code to see if follower is lost.
-                if (lostFollower) {
-                    greenTeam[i].canRedCommunicate = false;
-                    followersLost++;
-                    continue;
-                }
             
+            if (greenTeam[i].willVote && currentUncertainty < 4) {
+                if (messagePotency == 5) {
+                    if (willLose) {
+                        greenTeam[i].canRedCommunicate = false;
+                        followersLost++;
+                        willLose = false;
+                    } else {
+                        willLose = true;
+                    }
+                }
+                else if (messagePotency >= 4 && previousTurn >= 4) {
+                    if (willLose) {
+                        greenTeam[i].canRedCommunicate = false;
+                        followersLost++;
+                        willLose = false;
+                    } else {
+                        willLose = true;
+                    }
+                }
+                else if (messagePotency >= 3 && previousTurn >= 3 && previousPreviousTurn >= 3) {
+                    if (willLose) {
+                        greenTeam[i].canRedCommunicate = false;
+                        followersLost++;
+                        willLose = false;
+                    } else {
+                        willLose = true;
+                    }
+                }
+            }
+
              // uncertaintyChange calculated to change uncertainty by 0 - 2.5 based on current uncertainty level and message potency
             double uncertaintyChange = (currentUncertainty * (messagePotency / 2)) / 10;
-            double directionProbaility = GameLibrary.changeDirectionProbabilty( (int) currentUncertainty);
-            boolean towardCertainty = rand.nextInt(1,101) <= directionProbaility;
 
-            // toward uncertainty
-            if (!towardCertainty) {
-                // if they are sided with red team, only increase their uncertainty by only half compared to if they were sided with blue
-                if (!greenTeam[i].willVote) {
-                    uncertaintyChange = uncertaintyChange / 2;
-                }
-                // if new uncertainty value becomes higher than 10, which indicates the agent now switches to willVote
-                if ((currentUncertainty + uncertaintyChange) > 10) {
-                    greenTeam[i].uncertainty = 10 - ((currentUncertainty + uncertaintyChange) - 10);
-                    // If green agent was voting for blue, switch to red and vice versa
-                    if (greenTeam[i].willVote) {
-                        greenTeam[i].willVote = false;
-                    } else {
-                        greenTeam[i].willVote = true;
-                    }
-                } else {
-                    greenTeam[i].uncertainty += uncertaintyChange;
-                }
-            } 
-            // toward certainty
-            else {
-                // if they are sided with blue team, only increase their certainty by only half compared to if they were sided with red
-                if (greenTeam[i].willVote) {
-                    uncertaintyChange = uncertaintyChange / 2;
-                }
+            if (!greenTeam[i].willVote) {
                 if ((currentUncertainty - uncertaintyChange) < 0) {
                     greenTeam[i].uncertainty = 0;
                 }
@@ -71,12 +70,23 @@ public class RedAgent {
                     greenTeam[i].uncertainty -= uncertaintyChange;
                 }
             }
+            else {
+                if ((currentUncertainty + uncertaintyChange) > 10) {
+                    greenTeam[i].uncertainty = 10 - (currentUncertainty + uncertaintyChange - 10);
+                    greenTeam[i].willVote = false;
+                }
+                else {
+                    greenTeam[i].uncertainty += uncertaintyChange;
+                }
             }
-        totalFollowersLost += followersLost;
+            
+            totalFollowersLost += followersLost;
         }
         System.out.println("Red Teams Turn");
         System.out.println("Sent out a Potency value of " + messagePotency);
         System.out.println("Followers lost this round: " + followersLost + "\n");
+        previousPreviousTurn = previousTurn;
+        previousTurn = messagePotency;
         /*
         try {
             Thread.sleep(0);

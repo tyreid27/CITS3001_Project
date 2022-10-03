@@ -36,23 +36,24 @@ public class GameLibrary {
         return probability;
     }
 
-    public static int loseFollowerProbability(int uncertainty, int messagePotency) {
-        int probability = 0;
+    public static double loseFollowerProbability(double uncertainty, int messagePotency) {
+        double probability = 0.0;
         if (uncertainty >= 0 && uncertainty <= 1) {
-            probability = 10 * messagePotency;
+            probability = (10 * messagePotency) / 4;
         }
-        if (uncertainty > 1 && uncertainty <= 2) {
-            probability = 8 * messagePotency;
+        else if (uncertainty > 1 && uncertainty <= 2) {
+            probability = (8 * messagePotency) / 4;
         }
-        if (uncertainty > 2 && uncertainty <= 3) {
-            probability = 6 * messagePotency;
+        else if (uncertainty > 2 && uncertainty <= 3) {
+            probability = (6 * messagePotency) / 4;
         }
-        if (uncertainty > 3 && uncertainty <= 4) {
-            probability = 4 * messagePotency;
+        else if (uncertainty > 3 && uncertainty <= 4) {
+            probability = (4 * messagePotency) / 4;
         }
-        if (uncertainty > 4 && uncertainty <= 5) {
-            probability = 2 * messagePotency;
+        else if (uncertainty > 4 && uncertainty <= 5) {
+            probability = (2 * messagePotency) / 4;
         }
+        //System.out.println("probability: " + probability + "\n");
         return probability;
     }
 }
