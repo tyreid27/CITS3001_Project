@@ -40,7 +40,7 @@ public class BlueAgent{
             }
             double currentUncertainty = greenTeam[i].uncertainty;
             // uncertaintyChange calculated to change uncertainty by 0 - 2.5 based on current uncertainty level and message potency
-            double uncertaintyChange = (currentUncertainty * (certainty / 2)) / 10;
+            double uncertaintyChange = (currentUncertainty * (certainty / 2)) / 15;
 
             if (greenTeam[i].willVote) {
                 if ((currentUncertainty - uncertaintyChange) < 0) {
