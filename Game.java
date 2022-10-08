@@ -115,10 +115,18 @@ public class Game{
 
     public void nextRound(){
         day++;
-        System.out.println("Day " + day);
-        redAgent.redTurn(greenTeam);
+        //System.out.println("Day " + day);
+        // AI plays for red
+        Random rand = new Random();
+        int potency = rand.nextInt(1, 6);//redAgent.useRedAI(greenTeam, daysToElection - day, 'R', 4, network);
+        //
+        redAgent.redTurn(greenTeam, potency);
+        // AI plays for blue
+        boolean useGreyAgent = false;
+        int certainty = blueAgent.useBlueAI(greenTeam, daysToElection - day, 'B', 4, network, greyTeam);
+        //
         if (blueAgent.energy > 0) {
-            blueAgent.blueTurn(greenTeam, greyTeam);
+            blueAgent.blueTurn(greenTeam, greyTeam, useGreyAgent, certainty);
         }
         GreenAgent.greenTurn(greenTeam, network);
     }
