@@ -170,7 +170,7 @@ public class BlueAgent{
             if (numGainedVoters == 5) {
                 energy += 1;
                 numGainedVoters = 0;
-                //System.out.println("Blue has gained an energy!");
+                System.out.println("Blue has gained an energy!");
             }
             double currentUncertainty = greenTeam[i].uncertainty;
             // uncertaintyChange calculated to change uncertainty by 0 - 2.5 based on current uncertainty level and message potency
@@ -197,8 +197,6 @@ public class BlueAgent{
         }
         energy -= certainty;
         
-        //System.out.println("Sent out a certainty value of " + certainty);
-        //System.out.println("Energy Left: " + energy + "\n");
         /*try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {

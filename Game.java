@@ -136,12 +136,17 @@ public class Game{
         //System.out.println("Day " + day);
         // AI plays for red
         int potency = redAgent.useRedAI(greenTeam, daysToElection - day, 'R', 4, network);
+        System.out.println("Red Teams Turn");
         redAgent.redTurn(greenTeam, potency);
+        System.out.println("Sent out a message potency of: " + redAgent.previousTurn);
+        System.out.println("Total followers lost: " + redAgent.totalFollowersLost);
         // AI plays for blue
-        boolean useGreyAgent = false;
-        int certainty = blueAgent.useBlueAI(greenTeam, daysToElection - day, 'B', 4, network, greyTeam);
         if (blueAgent.energy > 0) {
-            blueAgent.blueTurn(greenTeam, greyTeam, useGreyAgent, certainty);
+            System.out.println("Blue Teams Turn");
+            int certainty = blueAgent.useBlueAI(greenTeam, daysToElection - day, 'B', 4, network, greyTeam);
+            blueAgent.blueTurn(greenTeam, greyTeam, false, certainty);
+            System.out.println("Send out a certainty of: " + blueAgent.certainty);
+            System.out.println("Energy left: " + blueAgent.energy);
         }
         GreenAgent.greenTurn(greenTeam, network);
     }
