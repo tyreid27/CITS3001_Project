@@ -9,12 +9,14 @@ public class RedAgent {
     int totalFollowersLost;
     int previousTurn;
     int previousPreviousTurn;
+    boolean isUserPlaying;
 
-    public RedAgent() {
+    public RedAgent(boolean isUserPlaying) {
         this.messagePotency = 0;
         this.totalFollowersLost = 0;
         this.previousTurn = 0;
         this.previousPreviousTurn = 0;
+        this.isUserPlaying = isUserPlaying;
     }
 
     // make a copy of the state of the game
@@ -54,7 +56,7 @@ public class RedAgent {
             for(int i = 1; i <= 5; i++){
                 GreenAgent[] childState = copyState(gameState);
                 // create a blue agent temporarily to use its methods
-                BlueAgent temp = new BlueAgent(420);
+                BlueAgent temp = new BlueAgent(420, false);
                 temp.blueTurn(childState, null, false, i);
                 GreenAgent.greenTurn(childState, network);
                 Action evaluation = minimax(childState, daysLeft - 1, 'R', depth - 1, network);
@@ -92,6 +94,26 @@ public class RedAgent {
     }
 
     public void redTurn(GreenAgent[] greenTeam, int messagePotency) {
+        // if user is playing then ask for user input for message potency
+        if (isUserPlaying) {
+            Scanner s = new Scanner(System.in);
+            // Continually asks for user input until it receives a valid number from 1 to 5
+            while (true) {
+                try {
+                    System.out.println("Select a message potency from 1 to 5");
+                    messagePotency = s.nextInt();
+                    if (messagePotency < 1 || messagePotency > 5) {
+                        throw new IllegalArgumentException();
+                    } else {
+                        break;
+                    }
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Your input was not in the correct range, please try again\n");
+                }
+            }
+        } else {
+            this.messagePotency = messagePotency;
+        }
         int followersLost = 0;
         boolean willLose = false; // boolean to have so that only every second follower is lost when message potency is high.
         // loop through greenteam members and interact with them.

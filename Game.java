@@ -25,8 +25,9 @@ public class Game{
      * @param nGrey the number of grey agents on the grey team
      * @param prob the probability of connection between two green agents
      * @param prop the proportion of grey agents on blue team
+     * @param userTeam what team the user is playing on, null if user not playing
      */
-    public Game(int days, int nGreen, int nGrey, int prob, int prop){
+    public Game(int days, int nGreen, int nGrey, int prob, int prop, char userTeam){
         this.daysToElection = days;
         // initialise array of grey team members
         this.greyTeam = new GreyAgent[nGrey];
@@ -53,15 +54,23 @@ public class Game{
                 if(rand.nextInt(1,101) <= prob && pairsConnected[i][j] == 0){
                     network[i][j] = level;
                     network[j][i] = level;
-                    greenTeam[i].connections.add(greenTeam[j]);
-                    greenTeam[j].connections.add(greenTeam[i]);
                     pairsConnected[i][j] = 1;
                     pairsConnected[j][i] = 1;
                 }
             }
         }
-        this.redAgent = new RedAgent();
-        this.blueAgent = new BlueAgent((days / 2) * 5);
+        if (userTeam == 'r' || userTeam == 'R') {
+            this.redAgent = new RedAgent(true);
+            this.blueAgent = new BlueAgent((days / 2) * 5, false);
+        } 
+        else if (userTeam == 'b' || userTeam == 'B') {
+            this.redAgent = new RedAgent(false);
+            this.blueAgent = new BlueAgent((days / 2) * 5, true);
+        }
+        else {
+            this.redAgent = new RedAgent(false);
+            this.blueAgent = new BlueAgent((days / 2) * 5, false);
+        }
         this.day = 0;
 
         //System.out.println(network[7][3]);
@@ -75,8 +84,9 @@ public class Game{
      * @param nGrey the number of agents on the grey team
      * @param network the input file containing edges between green nodes
      * @param prop the percentage of grey agents on blue team
+     * @param userTeam what team the user is playing on, null if user not playing
      */
-     public Game (int days, int nGreen, int nGrey, String edges, int prop){
+     public Game (int days, int nGreen, int nGrey, String edges, int prop, char userTeam){
         this.daysToElection = days;
         // initialise array of grey team members
         this.greyTeam = new GreyAgent[nGrey];
@@ -101,15 +111,23 @@ public class Game{
                 int id2 = Integer.valueOf(row.split(",")[1]);
                 network[id1][id2] = 1;
                 network[id2][id1] = 1;
-                greenTeam[id1].connections.add(greenTeam[id2]);
-                greenTeam[id2].connections.add(greenTeam[id1]);
             } 
             scanner.close();
         } catch(IOException e) {  
             e.printStackTrace();  
         }
-        this.redAgent = new RedAgent();
-        this.blueAgent = new BlueAgent((days / 2) * 5);
+        if (userTeam == 'r' || userTeam == 'R') {
+            this.redAgent = new RedAgent(true);
+            this.blueAgent = new BlueAgent((days / 2) * 5, false);
+        } 
+        else if (userTeam == 'b' || userTeam == 'B') {
+            this.redAgent = new RedAgent(false);
+            this.blueAgent = new BlueAgent((days / 2) * 5, true);
+        }
+        else {
+            this.redAgent = new RedAgent(false);
+            this.blueAgent = new BlueAgent((days / 2) * 5, false);
+        }
         this.day = 0;
     }
 
@@ -117,16 +135,18 @@ public class Game{
         day++;
         //System.out.println("Day " + day);
         // AI plays for red
-        Random rand = new Random();
-        int potency = rand.nextInt(1, 6);//redAgent.useRedAI(greenTeam, daysToElection - day, 'R', 4, network);
-        //
+        int potency = redAgent.useRedAI(greenTeam, daysToElection - day, 'R', 4, network);
+        System.out.println("Red Teams Turn");
         redAgent.redTurn(greenTeam, potency);
+        System.out.println("Sent out a message potency of: " + redAgent.previousTurn);
+        System.out.println("Total followers lost: " + redAgent.totalFollowersLost);
         // AI plays for blue
-        boolean useGreyAgent = false;
-        int certainty = blueAgent.useBlueAI(greenTeam, daysToElection - day, 'B', 4, network, greyTeam);
-        //
         if (blueAgent.energy > 0) {
-            blueAgent.blueTurn(greenTeam, greyTeam, useGreyAgent, certainty);
+            System.out.println("Blue Teams Turn");
+            int certainty = blueAgent.useBlueAI(greenTeam, daysToElection - day, 'B', 4, network, greyTeam);
+            blueAgent.blueTurn(greenTeam, greyTeam, false, certainty);
+            System.out.println("Send out a certainty of: " + blueAgent.certainty);
+            System.out.println("Energy left: " + blueAgent.energy);
         }
         GreenAgent.greenTurn(greenTeam, network);
     }
@@ -162,8 +182,8 @@ public class Game{
     }
     
     public static void printUsage(){
-        System.out.println("Usage: java Game <days> <size of green team> <size of grey team> <network % density> <% of greys on blue team>");
-        System.out.println("     : java Game -f <days> <size of green team> <size of grey team> <network file> <% of greys on blue team>");
+        System.out.println("Usage: java Game <days> <size of green team> <size of grey team> <network % density> <% of greys on blue team> <is user playing (R for red / B for blue / N for no)>");
+        System.out.println("     : java Game -f <days> <size of green team> <size of grey team> <network file> <% of greys on blue team> <is user playing (R for red / B for blue / N for no)>");
     }
 
     public static void main(String[] args){
@@ -176,9 +196,9 @@ public class Game{
         }
         // determine which constructor to call
         if(args[0].equals("-f")){
-            game = new Game(Integer.valueOf(args[1]), Integer.valueOf(args[2]), Integer.valueOf(args[3]), args[4], Integer.valueOf(args[5]));
+            game = new Game(Integer.valueOf(args[1]), Integer.valueOf(args[2]), Integer.valueOf(args[3]), args[4], Integer.valueOf(args[5]), args[6].charAt(0));
         } else {
-            game = new Game(Integer.valueOf(args[0]), Integer.valueOf(args[1]), Integer.valueOf(args[2]), Integer.valueOf(args[3]), Integer.valueOf(args[4]));
+            game = new Game(Integer.valueOf(args[0]), Integer.valueOf(args[1]), Integer.valueOf(args[2]), Integer.valueOf(args[3]), Integer.valueOf(args[4]), args[5].charAt(0));
         }
         // start the game
         if(game != null)

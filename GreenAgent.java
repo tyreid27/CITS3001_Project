@@ -5,8 +5,6 @@ import java.util.*;
  * to vote in the upcomming election.
  */
 public class GreenAgent {
-    // an adjacency list of the green agents that this agent can 'talk' to
-    ArrayList<GreenAgent> connections;
     // true if the agent will be voting in the election, false otherwise
     boolean willVote;
     // higher uncertainty means higher probability the agents opinion will change (0 to 10)
@@ -22,7 +20,6 @@ public class GreenAgent {
      * @param willVote the value for if this agent will vote.
      */
     public GreenAgent(ArrayList<GreenAgent> connections, boolean willVote, int uncertainty, int id){
-        this.connections = new ArrayList<GreenAgent>();
         this.willVote = willVote;
         this.id = id;
         this.canRedCommunicate = true;
@@ -38,7 +35,6 @@ public class GreenAgent {
      * constructor for green agent that sets random parameters for willVote and uncertainty.
      */
      public GreenAgent(int id){
-        this.connections = new ArrayList<GreenAgent>();
         Random rand = new Random();
         // exactly 50% of green agents start voting
         if(id % 2 == 0)
