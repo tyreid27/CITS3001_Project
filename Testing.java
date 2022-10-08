@@ -3,6 +3,9 @@ import java.awt.Graphics;
 import javax.swing.JFrame;
 import java.awt.Color;
 import java.util.*;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
 public class Testing extends Canvas {
     public static void main(String[] args) {
@@ -32,16 +35,16 @@ public class Testing extends Canvas {
         }
         g.setColor(Color.black);
         Random rand = new Random();
-        int random = rand.newInt(11);
         for(int i = 0; i < locations.length; i++){
             for(int j = 0; j < locations.length; j++){
-                if(random  > 5)
+                int random = rand.nextInt(11);
+                if(random < 1)
                     g.drawLine(locations[i][0], locations[i][1], locations[j][0], locations[j][1]);
             }
         }
          g.setColor(Color.green);
         for(int i = 0; i < locations.length; i++){
-            g.fillOval(locations[i][0], locations[i][1], 10, 10);
+            g.fillOval(locations[i][0] - 2, locations[i][1] - 2, 10, 10);
         }
     }
 
