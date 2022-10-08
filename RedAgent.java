@@ -71,7 +71,8 @@ public class RedAgent {
             int minEvaluation = Integer.MAX_VALUE;
             for(int i = 1; i <= 5; i++){
                 GreenAgent[] childState = copyState(gameState);
-                redTurn(childState, i);
+                RedAgent tempRed = new RedAgent(false);
+                tempRed.redTurn(childState, i);
                 Action evaluation = minimax(childState, daysLeft - 1, 'B', depth - 1, network);
                 if (evaluation.utility < minEvaluation){
                     bestPotency = i;

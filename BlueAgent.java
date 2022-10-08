@@ -54,7 +54,8 @@ public class BlueAgent{
             int maxEvaluation = Integer.MIN_VALUE;
             for(int i = 1; i <= 5; i++){
                 GreenAgent[] childState = copyState(gameState);
-                blueTurn(childState, null, false, i);
+                BlueAgent tempBlue = new BlueAgent(0, false);
+                tempBlue.blueTurn(childState, null, false, i);
                 GreenAgent.greenTurn(childState, network);
                 Action evaluation = minimax(childState, daysLeft - 1, 'R', depth - 1, network, null);
                 if (evaluation.utility > maxEvaluation){
