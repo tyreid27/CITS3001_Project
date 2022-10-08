@@ -9,17 +9,40 @@ public class RedAgent {
     int totalFollowersLost;
     int previousTurn;
     int previousPreviousTurn;
+    boolean isUserPlaying;
 
-    public RedAgent() {
+    public RedAgent(boolean isUserPlaying) {
         this.messagePotency = 0;
         this.totalFollowersLost = 0;
         this.previousTurn = 0;
         this.previousPreviousTurn = 0;
+        this.isUserPlaying = isUserPlaying;
     }
 
     public void redTurn(GreenAgent[] greenTeam) {
-        Random rand = new Random();
-        messagePotency = rand.nextInt((5-1) + 1) + 1;
+
+        // if user is playing then ask for user input for message potency
+        if (isUserPlaying) {
+            Scanner s = new Scanner(System.in);
+            // Continually asks for user input until it receives a valid number from 1 to 5
+            while (true) {
+                try {
+                    System.out.println("Select a message potency from 1 to 5");
+                    messagePotency = s.nextInt();
+                    if (messagePotency < 1 || messagePotency > 5) {
+                        throw new IllegalArgumentException();
+                    } else {
+                        break;
+                    }
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Your input was not in the correct range, please try again\n");
+                }
+            }
+        } else {
+            Random rand = new Random();
+            messagePotency = rand.nextInt((5-1) + 1) + 1;
+        }
+
         int followersLost = 0;
         boolean willLose = false; // boolean to have so that only every second follower is lost when message potency is high.
         // loop through greenteam members and interact with them.

@@ -9,8 +9,6 @@ import java.util.*;
 public class GreyAgent{
     // the team that the particular grey agent works for. 0: blue, 1: red
     int worksFor;
-    // which green team agents this grey agent can talk to
-    ArrayList<GreenAgent> connections;
     // the id of this greyAgent to keep track of grey agents
     int id;
 
@@ -23,9 +21,7 @@ public class GreyAgent{
         this.id = id;
     }
 
-    public void greyTurn(GreenAgent[] greenTeam) {
-        Random rand = new Random();
-        int potency = rand.nextInt((5-1) + 1) + 1;
+    public void greyTurn(GreenAgent[] greenTeam, int potency) {
         for (int i = 0; i < greenTeam.length; i++) {
             double currentUncertainty = greenTeam[i].uncertainty;
             // uncertaintyChange calculated to change uncertainty by 0 - 2.5 based on current uncertainty level and message potency
