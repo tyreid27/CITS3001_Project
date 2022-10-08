@@ -19,8 +19,81 @@ public class RedAgent {
         this.isUserPlaying = isUserPlaying;
     }
 
-    public void redTurn(GreenAgent[] greenTeam) {
+    // make a copy of the state of the game
+    public GreenAgent[] copyState(GreenAgent[] greenTeam){
+        GreenAgent[] copy = new GreenAgent[greenTeam.length];
+        for(int i = 0; i < greenTeam.length; i++){
+            copy[i] = new GreenAgent(i);
+            copy[i].willVote = greenTeam[i].willVote;
+            copy[i].uncertainty = greenTeam[i].uncertainty;
+            copy[i].id = greenTeam[i].id;
+            copy[i].canRedCommunicate = greenTeam[i].canRedCommunicate;
+        }
+        return copy;
+    }
 
+    public int useRedAI (GreenAgent[] gameState, int daysLeft, char maximisingPlayer, int depth, int[][] network){
+        Action action = minimax(gameState, daysLeft, maximisingPlayer, depth, network);
+        return action.potency;
+    }
+
+    public int getUtility(GreenAgent[] gameState, char maximiser){
+        // the heuristic is the number of green agents voting
+        int count = 0;
+        for(int i = 0; i < gameState.length; i++){
+            if(gameState[i].willVote == true)
+                count++;
+        }
+        return count;
+    }
+
+    public Action minimax(GreenAgent[] gameState, int daysLeft, char maximisingPlayer, int depth, int[][] network){
+        int bestPotency = -1;
+        if (depth == 0 || daysLeft == 0)
+            return new Action(-1, getUtility(gameState, maximisingPlayer)); 
+        if (maximisingPlayer == 'B'){
+            int maxEvaluation = Integer.MIN_VALUE;
+            for(int i = 1; i <= 5; i++){
+                GreenAgent[] childState = copyState(gameState);
+                // create a blue agent temporarily to use its methods
+                BlueAgent temp = new BlueAgent(420, false);
+                temp.blueTurn(childState, null, false, i);
+                GreenAgent.greenTurn(childState, network);
+                Action evaluation = minimax(childState, daysLeft - 1, 'R', depth - 1, network);
+                if (evaluation.utility > maxEvaluation){
+                    bestPotency = i;
+                    maxEvaluation = evaluation.utility;
+                }
+            }
+            return new Action(bestPotency, maxEvaluation); 
+        }
+        if (maximisingPlayer == 'R'){
+            int minEvaluation = Integer.MAX_VALUE;
+            for(int i = 1; i <= 5; i++){
+                GreenAgent[] childState = copyState(gameState);
+                redTurn(childState, i);
+                Action evaluation = minimax(childState, daysLeft - 1, 'B', depth - 1, network);
+                if (evaluation.utility < minEvaluation){
+                    bestPotency = i;
+                    minEvaluation = evaluation.utility;
+                }
+            }
+            return new Action(bestPotency, minEvaluation);
+        }
+        System.out.println("minimax did not recieve 'R' or 'B'");
+        return null;
+    }
+
+    private class Action{
+        int potency;
+        int utility;
+        public Action(int potency, int utility){
+            this.potency = potency;
+            this.utility = utility;
+        }
+    }
+
+    public void redTurn(GreenAgent[] greenTeam, int messagePotency) {
         // if user is playing then ask for user input for message potency
         if (isUserPlaying) {
             Scanner s = new Scanner(System.in);
@@ -39,10 +112,8 @@ public class RedAgent {
                 }
             }
         } else {
-            Random rand = new Random();
-            messagePotency = rand.nextInt((5-1) + 1) + 1;
+            this.messagePotency = messagePotency;
         }
-
         int followersLost = 0;
         boolean willLose = false; // boolean to have so that only every second follower is lost when message potency is high.
         // loop through greenteam members and interact with them.
@@ -105,9 +176,9 @@ public class RedAgent {
             
             totalFollowersLost += followersLost;
         }
-        System.out.println("Red Teams Turn");
-        System.out.println("Sent out a Potency value of " + messagePotency);
-        System.out.println("Followers lost this round: " + followersLost + "\n");
+        // System.out.println("Red Teams Turn");
+        // System.out.println("Sent out a Potency value of " + messagePotency);
+        // System.out.println("Followers lost this round: " + followersLost + "\n");
         previousPreviousTurn = previousTurn;
         previousTurn = messagePotency;
         /*
