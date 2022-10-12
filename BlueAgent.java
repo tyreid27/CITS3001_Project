@@ -84,7 +84,7 @@ public class BlueAgent{
                 GreenAgent[] childState = copyState(gameState);
                 RedAgent temporary = new RedAgent(false); 
                 temporary.redTurn(childState, i, true);
-                Action evaluation = minimax(childState, daysLeft - 1, 'B', depth - 1, network, null);
+                Action evaluation = minimax(childState, daysLeft - 1, 'B', depth - 1, network, greyTeam, greySelected + 1);
                 if (evaluation.utility < minEvaluation){
                     bestPotency = i;
                     minEvaluation = evaluation.utility;
