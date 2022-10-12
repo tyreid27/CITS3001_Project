@@ -49,7 +49,6 @@ public class GreenAgent {
 
 
      public static void greenTurn(GreenAgent[] greenTeam, int[][] network){
-
         for(int i = 0; i < greenTeam.length; i++){
             for(int j = 0; j < greenTeam.length; j++){
                 if(i != j && network[i][j] != 0){

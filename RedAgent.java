@@ -4,12 +4,11 @@ import java.util.*;
  */
 
 public class RedAgent {
-    // potency of message
-    int messagePotency;
-    int totalFollowersLost;
-    int previousTurn;
-    int previousPreviousTurn;
-    boolean isUserPlaying;
+    int messagePotency; // potency of message
+    int totalFollowersLost; // total followers lost
+    int previousTurn; // mP they sent out last turn
+    int previousPreviousTurn; // mP they sent out 2 turns ago
+    boolean isUserPlaying; // true if the user is playing
 
     public RedAgent(boolean isUserPlaying) {
         this.messagePotency = 0;
@@ -72,7 +71,7 @@ public class RedAgent {
             for(int i = 1; i <= 5; i++){
                 GreenAgent[] childState = copyState(gameState);
                 RedAgent tempRed = new RedAgent(false);
-                tempRed.redTurn(childState, i);
+                tempRed.redTurn(childState, i, true);
                 Action evaluation = minimax(childState, daysLeft - 1, 'B', depth - 1, network);
                 if (evaluation.utility < minEvaluation){
                     bestPotency = i;
@@ -94,7 +93,8 @@ public class RedAgent {
         }
     }
 
-    public void redTurn(GreenAgent[] greenTeam, int messagePotency) {
+    public void redTurn(GreenAgent[] greenTeam, int messagePotency, boolean isAi) {
+        totalFollowersLost = 0;
         // if user is playing then ask for user input for message potency
         if (isUserPlaying) {
             Scanner s = new Scanner(System.in);
@@ -116,7 +116,7 @@ public class RedAgent {
             this.messagePotency = messagePotency;
         }
         int followersLost = 0;
-        boolean willLose = false; // boolean to have so that only every second follower is lost when message potency is high.
+        boolean willLose = false; // boolean to have so that only every second follower is lost when message potency is high rather than every follower
         // loop through greenteam members and interact with them.
         for (int i = 0; i < greenTeam.length; i++) {
             if (!greenTeam[i].canRedCommunicate) {
@@ -128,7 +128,9 @@ public class RedAgent {
                 if (messagePotency == 5) {
                     if (willLose) {
                         greenTeam[i].canRedCommunicate = false;
-                        followersLost++;
+                        if (!isAi) {
+                            followersLost++;
+                        }
                         willLose = false;
                     } else {
                         willLose = true;
@@ -137,7 +139,9 @@ public class RedAgent {
                 else if (messagePotency >= 4 && previousTurn >= 4) {
                     if (willLose) {
                         greenTeam[i].canRedCommunicate = false;
-                        followersLost++;
+                        if (!isAi) {
+                            followersLost++;
+                        }
                         willLose = false;
                     } else {
                         willLose = true;
@@ -146,7 +150,9 @@ public class RedAgent {
                 else if (messagePotency >= 3 && previousTurn >= 3 && previousPreviousTurn >= 3) {
                     if (willLose) {
                         greenTeam[i].canRedCommunicate = false;
-                        followersLost++;
+                        if (!isAi) {
+                            followersLost++;
+                        }
                         willLose = false;
                     } else {
                         willLose = true;
@@ -174,20 +180,14 @@ public class RedAgent {
                     greenTeam[i].uncertainty += uncertaintyChange;
                 }
             }
-            
-            totalFollowersLost += followersLost;
+            if (!isAi) {
+                totalFollowersLost += followersLost;
+            }
         }
         // System.out.println("Red Teams Turn");
         // System.out.println("Sent out a Potency value of " + messagePotency);
         // System.out.println("Followers lost this round: " + followersLost + "\n");
         previousPreviousTurn = previousTurn;
         previousTurn = messagePotency;
-        /*
-        try {
-            Thread.sleep(0);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
-        
     }
 }
