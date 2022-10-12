@@ -3,12 +3,11 @@ import java.util.*;
  * This class defines the properties of the blue team
  */
 public class BlueAgent{
-    // this agents unique id
-    int energy;
+    int energy; // energy of the blue team
     int certainty; // certainty of the blue team message
-    int numGainedVoters;
-    int selectedGreyAgent;
-    boolean isUserPlaying;
+    int numGainedVoters; // variable to keep track of number of voters blue team has gained
+    int selectedGreyAgent; // used to keep track of grey agents
+    boolean isUserPlaying; // determines if user is playing
 
     public BlueAgent(int energy, boolean isUserPlaying) {
         this.energy = energy;
@@ -84,8 +83,8 @@ public class BlueAgent{
             for(int i = 1; i <= 5; i++){
                 GreenAgent[] childState = copyState(gameState);
                 RedAgent temporary = new RedAgent(false); 
-                temporary.redTurn(childState, i);
-                Action evaluation = minimax(childState, daysLeft - 1, 'B', depth - 1, network, greyTeam, greySelected);
+                temporary.redTurn(childState, i, true);
+                Action evaluation = minimax(childState, daysLeft - 1, 'B', depth - 1, network, null);
                 if (evaluation.utility < minEvaluation){
                     bestPotency = i;
                     minEvaluation = evaluation.utility;
@@ -108,55 +107,56 @@ public class BlueAgent{
 
     public void blueTurn(GreenAgent[] greenTeam, GreyAgent[] greyTeam, boolean useGreyAgent, int certainty) {
         Scanner s = new Scanner(System.in);
-        // If any grey agents remain
+        // If grey team is populated
         if (greyTeam != null) {
+            // if there are no more grey agents then don't allow a grey agent to be selected
             if (selectedGreyAgent > greyTeam.length) {
                 System.out.println("You have run out of grey agents");
-            }
-        }
-        // No grey agents remain
-        else {
-            // If user is playing ask if they want to use a grey agent
-            if (isUserPlaying) {
-                while (true) {
-                    try {
-                        System.out.println("Do you want to use a grey agent? (y/n)");
-                        char nextChar = s.next().charAt(0);
-                        if (!(nextChar == 'y' || nextChar == 'Y' || nextChar == 'n' || nextChar == 'N')) {
-                            throw new IllegalArgumentException();
-                        }
-                        if (nextChar == 'y' || nextChar == 'Y') {
-                            useGreyAgent = true;
-                        }
-                        break;
-                    } catch (IllegalArgumentException e) {
-                        System.out.println("Input was not valid, please try again\n");
-                    }
-                }
-            } 
-
-            // If using grey agent ask for potency for grey agent and call grey turn
-            if (useGreyAgent) {
-                int greyPotency = 0;
+            // offer the option to select a grey agent 
+            } else {
+                // If user is playing ask if they want to use a grey agent
                 if (isUserPlaying) {
                     while (true) {
                         try {
-                            System.out.println("Input a message potency from 1 to 5 for your grey agent");
-                            greyPotency = s.nextInt();
-                            if (greyPotency < 1 || greyPotency > 5) {
+                            System.out.println("Do you want to use a grey agent? (y/n)");
+                            char nextChar = s.next().charAt(0);
+                            if (!(nextChar == 'y' || nextChar == 'Y' || nextChar == 'n' || nextChar == 'N')) {
                                 throw new IllegalArgumentException();
                             }
-                        } catch (IllegalArgumentException e){
-                            System.out.println("Your input was not in the correct range, please try again\n");
+                            if (nextChar == 'y' || nextChar == 'Y') {
+                                useGreyAgent = true;
+                            }
+                            break;
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Input was not valid, please try again\n");
                         }
                     }
-                } else {
-                    greyPotency = 5;
+                } 
+
+                // If using grey agent ask for potency for grey agent and call grey turn
+                if (useGreyAgent) {
+                    int greyPotency = 0;
+                    if (isUserPlaying) {
+                        while (true) {
+                            try {
+                                System.out.println("Input a message potency from 1 to 5 for your grey agent");
+                                greyPotency = s.nextInt();
+                                if (greyPotency < 1 || greyPotency > 5) {
+                                    throw new IllegalArgumentException();
+                                }
+                                break;
+                            } catch (IllegalArgumentException e){
+                                System.out.println("Your input was not in the correct range, please try again\n");
+                            }
+                        }
+                    } else {
+                        greyPotency = 5;
+                    }
+                    System.out.println("Using Grey Agent");
+                    greyTeam[selectedGreyAgent].greyTurn(greenTeam, greyPotency);
+                    selectedGreyAgent++;
+                    return;
                 }
-                System.out.println("Using Grey Agent");
-                greyTeam[selectedGreyAgent].greyTurn(greenTeam, greyPotency);
-                selectedGreyAgent++;
-                return;
             }
         }
 
@@ -181,12 +181,21 @@ public class BlueAgent{
         }
 
         for (int i = 0; i < greenTeam.length; i++) {
-            // Every time blue gains 3 voters they gain 1 energy
-            if (numGainedVoters == 5) {
+            // Allows blue team to gain energy when they gain voters. Different numbers of voters gained is required based on how many green agents there are
+            if (greenTeam.length > 1000 && numGainedVoters == 10) {
                 energy += 1;
                 numGainedVoters = 0;
-                //System.out.println("Blue has gained an energy!");
             }
+            if (greenTeam.length > 100 && numGainedVoters == 5) {
+                energy += 1;
+                numGainedVoters = 0;
+            }
+            if (greenTeam.length > 10 && numGainedVoters == 2) {
+                energy += 1;
+                numGainedVoters = 0;
+            }
+
+            // uncertainty of current green agent
             double currentUncertainty = greenTeam[i].uncertainty;
             // uncertaintyChange calculated to change uncertainty by 0 - 2.5 based on current uncertainty level and message potency
             double uncertaintyChange = (currentUncertainty * (certainty / 2)) / 15;
@@ -210,12 +219,7 @@ public class BlueAgent{
                 }
             }
         }
+        // deduct energy from blue based on the certainty they sent out
         energy -= certainty;
-        
-        /*try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
     }
 }

@@ -3,7 +3,7 @@ import java.io.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-
+import java.lang.Math;
 /**
  * This is the class to call to start the game
  * Compile with "javac Game.java"
@@ -53,14 +53,31 @@ public class Game extends JPanel{
         this.addMouseListener( handler );
 
         this.daysToElection = days;
-        // initialise array of grey team members
+        // initialise array of grey team members taking into account the probability
         this.greyTeam = new GreyAgent[nGrey];
-        for(int i = 0; i < nGrey; i++)
-            if (i % 3 == 0) {
-                greyTeam[i] = new GreyAgent(i, 1);
-            } else {
-                greyTeam[i] = new GreyAgent(i, 0);
+        int numBlueSidedAgents = (int)Math.round((prop / 10) * ((double)nGrey / 10));
+        int numSpyAgents = nGrey - numBlueSidedAgents;
+        Random rand = new Random();
+        boolean sidedWithBlue = rand.nextInt(1,101) <= prop;
+        int blueCount = 0;
+        int redCount = 0;
+        for(int i = 0; i < nGrey; i++) {
+            if (blueCount >= numBlueSidedAgents) {
+                greyTeam[i] = new GreyAgent(i,1);
+                redCount++;
             }
+            else if (redCount >= numSpyAgents) {
+                greyTeam[i] = new GreyAgent(i, 0);
+                blueCount++;
+            }
+            else if (sidedWithBlue) {
+                greyTeam[i] = new GreyAgent(i, 0);
+                blueCount++;
+            } else {
+                greyTeam[i] = new GreyAgent(i, 1);
+                redCount++;
+            }
+        }
         // initialise array of green team members 
         this.greenTeam = new GreenAgent[nGreen];
         for(int i = 0; i < nGreen; i++)
@@ -70,7 +87,6 @@ public class Game extends JPanel{
         // array to keep track of which pairs of nodes connections have been decided
         int[][] pairsConnected = new int[nGreen][nGreen];
         // make connections according to the prob
-        Random rand = new Random();
         for(int i = 0; i < nGreen; i++){
             for(int j = 0; j < nGreen; j++){
                 // generate a number between 1 and 4 for level of connections
@@ -111,12 +127,29 @@ public class Game extends JPanel{
         this.daysToElection = days;
         // initialise array of grey team members
         this.greyTeam = new GreyAgent[nGrey];
-        for(int i = 0; i < nGrey; i++)
-            if (i % 2 == 0) {
-                greyTeam[i] = new GreyAgent(i, 1);
-            } else {
-                greyTeam[i] = new GreyAgent(i, 0);
+        int numBlueSidedAgents = (int)Math.round((prop / 10) * ((double)nGrey / 10));
+        int numSpyAgents = nGrey - numBlueSidedAgents;
+        Random rand = new Random();
+        boolean sidedWithBlue = rand.nextInt(1,101) <= prop;
+        int blueCount = 0;
+        int redCount = 0;
+        for(int i = 0; i < nGrey; i++) {
+            if (blueCount >= numBlueSidedAgents) {
+                greyTeam[i] = new GreyAgent(i,1);
+                redCount++;
             }
+            else if (redCount >= numSpyAgents) {
+                greyTeam[i] = new GreyAgent(i, 0);
+                blueCount++;
+            }
+            else if (sidedWithBlue) {
+                greyTeam[i] = new GreyAgent(i, 0);
+                blueCount++;
+            } else {
+                greyTeam[i] = new GreyAgent(i, 1);
+                redCount++;
+            }
+        }
         // init array of green team members
         this.greenTeam = new GreenAgent[nGreen];
         for(int i = 0; i < nGreen; i++)
@@ -257,9 +290,12 @@ public class Game extends JPanel{
         day++;
         //System.out.println("Day " + day);
         // AI plays for red
-        int potency = redAgent.useRedAI(greenTeam, daysToElection - day, 'R', 4, network);
+        int potency = 0;
+        if (!redAgent.isUserPlaying) {
+            potency = redAgent.useRedAI(greenTeam, daysToElection - day, 'R', 4, network);
+        }
         System.out.println("Red Teams Turn");
-        redAgent.redTurn(greenTeam, potency);
+        redAgent.redTurn(greenTeam, potency, false);
         System.out.println("Sent out a message potency of: " + redAgent.previousTurn);
         System.out.println("Total followers lost: " + redAgent.totalFollowersLost);
         // AI plays for blue
