@@ -32,7 +32,7 @@ public class BlueAgent{
     }
 
     public int useBlueAI (GreenAgent[] gameState, int daysLeft, char maximisingPlayer, int depth, int[][] network, GreyAgent[] greyTeam){
-        Action action = minimax(gameState, daysLeft, maximisingPlayer, depth, network, greyTeam);
+        Action action = minimax(gameState, daysLeft, maximisingPlayer, depth, network, greyTeam, this.selectedGreyAgent);
         return action.potency;
     }
 
@@ -46,18 +46,32 @@ public class BlueAgent{
         return count;
     }
 
-    public Action minimax(GreenAgent[] gameState, int daysLeft, char maximisingPlayer, int depth, int[][] network, GreyAgent[] greyTeam){
+    public Action minimax(GreenAgent[] gameState, int daysLeft, char maximisingPlayer, int depth, int[][] network, GreyAgent[] greyTeam, int greySelected){
         int bestPotency = -1;
         if (depth == 0 || daysLeft == 0)
             return new Action(-1, getUtility(gameState, maximisingPlayer)); 
         if (maximisingPlayer == 'B'){
             int maxEvaluation = Integer.MIN_VALUE;
+            // if ai does not use the grey agent
             for(int i = 1; i <= 5; i++){
                 GreenAgent[] childState = copyState(gameState);
-                BlueAgent tempBlue = new BlueAgent(0, false);
-                tempBlue.blueTurn(childState, null, false, i);
+                BlueAgent tempBlue = new BlueAgent(100000, false);
+                tempBlue.blueTurn(childState, greyTeam, false, i);
                 GreenAgent.greenTurn(childState, network);
-                Action evaluation = minimax(childState, daysLeft - 1, 'R', depth - 1, network, null);
+                Action evaluation = minimax(childState, daysLeft - 1, 'R', depth - 1, network, greyTeam, greySelected);
+                if (evaluation.utility > maxEvaluation){
+                    bestPotency = i;
+                    maxEvaluation = evaluation.utility;
+                }
+            }
+            // if ai use the grey agent
+            for(int i = 1; i <= 5; i++){
+                GreenAgent[] childState = copyState(gameState);
+                BlueAgent tempBlue = new BlueAgent(10000, false);
+                tempBlue.selectedGreyAgent = greySelected;
+                tempBlue.blueTurn(childState, greyTeam, true, i);
+                GreenAgent.greenTurn(childState, network);
+                Action evaluation = minimax(childState, daysLeft - 1, 'R', depth - 1, network, greyTeam, greySelected + 1);
                 if (evaluation.utility > maxEvaluation){
                     bestPotency = i;
                     maxEvaluation = evaluation.utility;
@@ -71,7 +85,7 @@ public class BlueAgent{
                 GreenAgent[] childState = copyState(gameState);
                 RedAgent temporary = new RedAgent(false); 
                 temporary.redTurn(childState, i);
-                Action evaluation = minimax(childState, daysLeft - 1, 'B', depth - 1, network, null);
+                Action evaluation = minimax(childState, daysLeft - 1, 'B', depth - 1, network, greyTeam, greySelected);
                 if (evaluation.utility < minEvaluation){
                     bestPotency = i;
                     minEvaluation = evaluation.utility;
