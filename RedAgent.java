@@ -71,7 +71,7 @@ public class RedAgent {
             for(int i = 1; i <= 5; i++){
                 GreenAgent[] childState = copyState(gameState);
                 RedAgent tempRed = new RedAgent(false);
-                tempRed.redTurn(childState, i, true);
+                tempRed.redTurn(childState, i);
                 Action evaluation = minimax(childState, daysLeft - 1, 'B', depth - 1, network);
                 if (evaluation.utility < minEvaluation){
                     bestPotency = i;
@@ -93,8 +93,7 @@ public class RedAgent {
         }
     }
 
-    public void redTurn(GreenAgent[] greenTeam, int messagePotency, boolean isAi) {
-        totalFollowersLost = 0;
+    public void redTurn(GreenAgent[] greenTeam, int messagePotency) {
         // if user is playing then ask for user input for message potency
         if (isUserPlaying) {
             Scanner s = new Scanner(System.in);
@@ -128,9 +127,7 @@ public class RedAgent {
                 if (messagePotency == 5) {
                     if (willLose) {
                         greenTeam[i].canRedCommunicate = false;
-                        if (!isAi) {
-                            followersLost++;
-                        }
+                        followersLost++;
                         willLose = false;
                     } else {
                         willLose = true;
@@ -139,9 +136,7 @@ public class RedAgent {
                 else if (messagePotency >= 4 && previousTurn >= 4) {
                     if (willLose) {
                         greenTeam[i].canRedCommunicate = false;
-                        if (!isAi) {
-                            followersLost++;
-                        }
+                        followersLost++;
                         willLose = false;
                     } else {
                         willLose = true;
@@ -150,16 +145,13 @@ public class RedAgent {
                 else if (messagePotency >= 3 && previousTurn >= 3 && previousPreviousTurn >= 3) {
                     if (willLose) {
                         greenTeam[i].canRedCommunicate = false;
-                        if (!isAi) {
-                            followersLost++;
-                        }
+                        followersLost++;
                         willLose = false;
                     } else {
                         willLose = true;
                     }
                 }
             }
-
              // uncertaintyChange calculated to change uncertainty by 0 - 2.5 based on current uncertainty level and message potency
             double uncertaintyChange = (currentUncertainty * (messagePotency / 2)) / 10;
 
@@ -180,10 +172,8 @@ public class RedAgent {
                     greenTeam[i].uncertainty += uncertaintyChange;
                 }
             }
-            if (!isAi) {
-                totalFollowersLost += followersLost;
-            }
         }
+        totalFollowersLost += followersLost;
         // System.out.println("Red Teams Turn");
         // System.out.println("Sent out a Potency value of " + messagePotency);
         // System.out.println("Followers lost this round: " + followersLost + "\n");
