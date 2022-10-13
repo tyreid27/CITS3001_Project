@@ -247,7 +247,7 @@ public class Game extends JPanel{
                 totalVoters++;
             }
         }
-        System.out.println(totalVoters);
+        //System.out.println(totalVoters);
         g.drawString("Total voters: " + Integer.toString(totalVoters), 10, 50);
     }
 
@@ -287,26 +287,36 @@ public class Game extends JPanel{
      * method to initiate the next round of the game
      */
     public void nextRound(){
+        System.out.println("\n----------------------------------------------------\n");
         day++;
-        //System.out.println("Day " + day);
+        System.out.println("Day " + day);
         // AI plays for red
         int potency = 0;
         if (!redAgent.isUserPlaying) {
             potency = redAgent.useRedAI(greenTeam, daysToElection - day, 'R', 4, network);
         }
-        System.out.println("Red Teams Turn");
-        redAgent.redTurn(greenTeam, potency, false);
+        redAgent.redTurn(greenTeam, potency);
+        System.out.println("\nRed Teams Turn");
         System.out.println("Sent out a message potency of: " + redAgent.previousTurn);
         System.out.println("Total followers lost: " + redAgent.totalFollowersLost);
         // AI plays for blue
         if (blueAgent.energy > 0) {
-            System.out.println("Blue Teams Turn");
-            int certainty = blueAgent.useBlueAI(greenTeam, daysToElection - day, 'B', 4, network, greyTeam);
+            int certainty = 0;
+            if (!blueAgent.isUserPlaying) {
+                certainty = blueAgent.useBlueAI(greenTeam, daysToElection - day, 'B', 4, network, greyTeam);
+            }
             blueAgent.blueTurn(greenTeam, greyTeam, false, certainty);
-            System.out.println("Send out a certainty of: " + blueAgent.certainty);
+            System.out.println("\nBlue Teams Turn");
+            System.out.println("Sent out a certainty of: " + blueAgent.certainty);
             System.out.println("Energy left: " + blueAgent.energy);
         }
         GreenAgent.greenTurn(greenTeam, network);
+        // int totalVotes = 0;
+        // for (int i = 0; i < greenTeam.length; i++) {
+        //     if (greenTeam[i].willVote) {totalVotes++;}
+        // }
+        // System.out.println("TOTAL VOTES: " + totalVotes + "\n");
+        
         try {
             Thread.sleep(50);
         } catch (InterruptedException e) {
