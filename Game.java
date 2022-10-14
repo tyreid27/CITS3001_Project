@@ -13,7 +13,7 @@ public class Game extends JPanel{
     // FOR THE GUI
     // number of green nodes
     static int nodes;
-    final double RADIUS = 350;
+    final double RADIUS = 300;
     static JFrame frame;
     private final int DEFAULT_WIDTH  = 1200;
     private final int DEFAULT_HEIGHT = 800;
@@ -21,6 +21,8 @@ public class Game extends JPanel{
     private int x1, y1, x2, y2;
     private MyMouseHandler handler;
     private Graphics g;
+    static char whoAmI;
+    static boolean gameNotOver = true;
 
     // number of days in the election campaign
     int daysToElection;
@@ -102,14 +104,17 @@ public class Game extends JPanel{
         if (userTeam == 'r' || userTeam == 'R') {
             this.redAgent = new RedAgent(true);
             this.blueAgent = new BlueAgent((days / 2) * 5, false);
+            this.whoAmI = 'R';
         } 
         else if (userTeam == 'b' || userTeam == 'B') {
             this.redAgent = new RedAgent(false);
             this.blueAgent = new BlueAgent((days / 2) * 5, true);
+            this.whoAmI = 'B';
         }
         else {
             this.redAgent = new RedAgent(false);
             this.blueAgent = new BlueAgent((days / 2) * 5, false);
+            this.whoAmI = 'N';
         }
         this.day = 0;
     }
@@ -124,6 +129,14 @@ public class Game extends JPanel{
      * @param userTeam what team the user is playing on, null if user not playing
      */
      public Game (int days, int nGreen, int nGrey, String edges, int prop, char userTeam){
+        // FOR THE GUI
+        setBackground( BACK_COLOR );
+        setPreferredSize( new Dimension( DEFAULT_WIDTH, DEFAULT_HEIGHT ) );
+
+        handler  = new MyMouseHandler();
+
+        this.addMouseListener( handler );
+
         this.daysToElection = days;
         // initialise array of grey team members
         this.greyTeam = new GreyAgent[nGrey];
@@ -192,11 +205,13 @@ public class Game extends JPanel{
      */
     public void paint(Graphics g) {
         // draw the blue team
-        g.setColor(Color.blue);
-        g.fillOval(150, 400, 30, 30);
+        g.setColor(new Color(31, 81, 255));
+        g.fillOval(125, 380, 30, 30);
+        g.setColor(Color.BLACK);
+        g.drawString("Energy: " + blueAgent.energy, 110, 430);
         // draw the red team
-        g.setColor(Color.red);
-        g.fillOval(1050, 400, 30, 30);
+        g.setColor(new Color(210, 4, 45));
+        g.fillOval(1050, 380, 30, 30);
         // get the position of where to draw each green team node
         int[][] locations = new int[nodes][2];
         double radius = RADIUS;
@@ -207,6 +222,18 @@ public class Game extends JPanel{
             double y = -1 * radius * Math.sin(theta);
             locations[counter][0] = (int)x + 600;
             locations[counter][1] = (int)y + 400;
+            counter++;
+        }
+        // get the positions of where to draw each green nodes id
+        int[][] idLocations = new int[nodes][2];
+        radius = RADIUS + 18;
+        counter = 0;
+        for(double i = 0; i <= 359; i = i + (360.0 / nodes)){
+            double theta = (i-90) * Math.PI/180;
+            double x = radius * Math.cos(theta);
+            double y = -1 * radius * Math.sin(theta);
+            idLocations[counter][0] = (int)x + 600;
+            idLocations[counter][1] = (int)y + 400;
             counter++;
         }
         // draw connections between green nodes
@@ -231,15 +258,23 @@ public class Game extends JPanel{
             }
         }
         // draw the green team
-        g.setColor(new Color(51, 158, 0));
+        g.setColor(new Color(0, 163, 108));
         for(int i = 0; i < locations.length; i++){
             g.fillOval(locations[i][0] - 4, locations[i][1] - 4, 10, 10);
         }
+        // draw green team ids
+        g.setColor(Color.BLACK);
+        for(int i = 0; i < idLocations.length; i++){
+            g.drawString(Integer.toString(i), idLocations[i][0] - 6, idLocations[i][1] + 4);
+        }
+        // draw the top bar
+        g.setColor(new Color(220,220,220));
+        g.fillRect(0, 0, 1200, 50);
         // draw the day into the election
-        String dayCount = "day " + day + " of " + daysToElection;
+        String dayCount = "Day: " + day + " of " + daysToElection;
         g.setColor(Color.BLACK);
         g.setFont(new Font("TimesRoman", Font.PLAIN, 20)); 
-        g.drawString(dayCount, 10, 20);
+        g.drawString(dayCount, 30, 33);
         // draw the total voters for the round
         int totalVoters = 0;
         for (int i = 0; i < greenTeam.length; i++){
@@ -248,7 +283,29 @@ public class Game extends JPanel{
             }
         }
         //System.out.println(totalVoters);
-        g.drawString("Total voters: " + Integer.toString(totalVoters), 10, 50);
+        g.drawString("Total voters: " + Integer.toString(totalVoters) + " of " + greenTeam.length, 200, 33);
+        // draw the number of grey agents
+        g.drawString("Grey agents: " + (greyTeam.length - blueAgent.selectedGreyAgent), 440, 33);
+        // draw the number of green agents
+        g.drawString("Green agents: " + greenTeam.length, 635, 33);
+        // draw botton bar
+        g.setColor(new Color(220,220,220));
+        g.fillRect(0, 750, 1200, 750);
+        // draw the next day button
+        g.setColor(new Color(30,144,255));
+        g.fillRect(1070, 750, 1200, 800);
+        g.setColor(Color.BLACK);
+        g.drawString("Next Day >>", 1085, 780);
+        // draw get green params button
+        g.setColor(new Color(80, 200, 120));
+        g.fillRect(0, 750, 125, 800);
+        g.setColor(Color.BLACK);
+        g.drawString("Green Info", 15, 780);
+        // draw gameover
+        if(!gameNotOver){
+            g.setColor(new Color(220, 20, 60));
+            g.drawString("GAME OVER", 1000, 33);
+        }
     }
 
     /**
@@ -278,8 +335,35 @@ public class Game extends JPanel{
             y1 = e.getY();
             System.out.println("Mouse is being pressed at X: " + x1 + " Y: " + y1);
             setUpDrawingGraphics();
-            x2=x1;
-            y2=y1;
+            if (x1 > 1070 && y1 > 750 && gameNotOver){
+                nextRound();
+            }
+            String sId = "id";
+            int id = 0;
+            if (x1 < 125 && y1 > 750){
+                sId = (String) JOptionPane.showInputDialog(
+                    frame,
+                    "Please enter a green agent ID.\nA number between 0 and " + (greenTeam.length - 1) + ".",
+                    "Get a green agents parameters",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    null,
+                    "ID");
+                try {
+                    id = Integer.parseInt(sId);
+                    if (id >= 0 && id < greenTeam.length){
+                        JOptionPane.showMessageDialog(frame,
+                            "ID: " + id + "\nVoting: " + greenTeam[id].willVote + "\nUncertainty: " + greenTeam[id].uncertainty + "\nListens to red: " + greenTeam[id].canRedCommunicate,
+                            "Green agent parameters",
+                            JOptionPane.INFORMATION_MESSAGE,
+                            null);
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Invalid ID.", "Green agent parameters", JOptionPane.WARNING_MESSAGE);
+                    }
+                } catch (NumberFormatException nfe) {
+                    JOptionPane.showMessageDialog(frame, "Invalid ID.", "Green agent parameters", JOptionPane.WARNING_MESSAGE);
+                }
+            }
         }
     }
 
@@ -318,7 +402,7 @@ public class Game extends JPanel{
         // System.out.println("TOTAL VOTES: " + totalVotes + "\n");
         
         try {
-            Thread.sleep(50);
+            Thread.sleep(250);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -326,19 +410,20 @@ public class Game extends JPanel{
 
     public void start(){
         try {
-            Thread.sleep(2000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         while(day != daysToElection){
             repaint();
-            nextRound();
+            //nextRound();
         }
         System.out.println("Game Over");
     }
 
     // Function to add up the total amount of votes and declare a winner
     public void end(){
+        gameNotOver = false;
         int totalVoters = 0;
         for (int i = 0; i < greenTeam.length; i++){
             if (greenTeam[i].willVote) {
@@ -347,12 +432,15 @@ public class Game extends JPanel{
         }
         if (((double)totalVoters / greenTeam.length) > 0.5){
             System.out.println("Blue Team Wins!");
+            JOptionPane.showMessageDialog(frame, "Game Over.\nBlue Team Wins!");
         }
         else if (((double)totalVoters / greenTeam.length) < 0.5){
             System.out.println("Red Team Wins");
+            JOptionPane.showMessageDialog(frame, "Game Over.\nRed Team Wins!");
         }
         else {
             System.out.println("Game is a draw");
+            JOptionPane.showMessageDialog(frame, "Game Over.\nGame is a Draw!");
         }
     }
 

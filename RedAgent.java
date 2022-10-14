@@ -1,4 +1,5 @@
 import java.util.*;
+import javax.swing.*;
 /**
  * This class defines the properties of the red team
  */
@@ -97,20 +98,36 @@ public class RedAgent {
         // if user is playing then ask for user input for message potency
         if (isUserPlaying) {
             Scanner s = new Scanner(System.in);
-            // Continually asks for user input until it receives a valid number from 1 to 5
-            while (true) {
-                try {
-                    System.out.println("Select a message potency from 1 to 5");
-                    messagePotency = s.nextInt();
-                    if (messagePotency < 1 || messagePotency > 5) {
-                        throw new IllegalArgumentException();
-                    } else {
-                        break;
-                    }
-                } catch (IllegalArgumentException e) {
-                    System.out.println("Your input was not in the correct range, please try again\n");
+            Object[] possibilities  = {"1 - blue is bad", "2", "3", "4", "5"};
+            String[] sPossibilities = {"1 - blue is bad", "2", "3", "4", "5"};
+            String string = (String)JOptionPane.showInputDialog(
+                        null,
+                        "Please select a message potency.\n"
+                        + "Higher is more potent.",
+                        "Red turn",
+                        JOptionPane.PLAIN_MESSAGE,
+                        null,
+                        possibilities,
+                        "1");
+            for(int i = 0; i < sPossibilities.length; i++){
+                if(string.equals(sPossibilities[i])){
+                    messagePotency = i + 1;
                 }
             }
+            // Continually asks for user input until it receives a valid number from 1 to 5
+            // while (true) {
+            //     try {
+            //         System.out.println("Select a message potency from 1 to 5");
+            //         messagePotency = s.nextInt();
+            //         if (messagePotency < 1 || messagePotency > 5) {
+            //             throw new IllegalArgumentException();
+            //         } else {
+            //             break;
+            //         }
+            //     } catch (IllegalArgumentException e) {
+            //         System.out.println("Your input was not in the correct range, please try again\n");
+            //     }
+            // }
         } else {
             this.messagePotency = messagePotency;
         }

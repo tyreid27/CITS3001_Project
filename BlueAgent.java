@@ -1,4 +1,5 @@
 import java.util.*;
+import javax.swing.*;
 /**
  * This class defines the properties of the blue team
  */
@@ -118,39 +119,60 @@ public class BlueAgent{
             } else {
                 // If user is playing ask if they want to use a grey agent
                 if (isUserPlaying) {
-                    while (true) {
-                        try {
-                            System.out.println("Do you want to use a grey agent? (y/n)");
-                            char nextChar = s.next().charAt(0);
-                            if (!(nextChar == 'y' || nextChar == 'Y' || nextChar == 'n' || nextChar == 'N')) {
-                                throw new IllegalArgumentException();
-                            }
-                            if (nextChar == 'y' || nextChar == 'Y') {
-                                useGreyAgent = true;
-                            }
-                            break;
-                        } catch (IllegalArgumentException e) {
-                            System.out.println("Input was not valid, please try again\n");
-                        }
+                    useGreyAgent = false;
+                    int useGreyPrompt = JOptionPane.showConfirmDialog(null, "Would you like to use a grey agent?\nEnergy left: " + energy + "\nGrey agents remaining: " + (greyTeam.length - selectedGreyAgent), "Blue turn", JOptionPane.YES_NO_OPTION);
+                    if(useGreyPrompt == 0){
+                        useGreyAgent = true;
                     }
+                    // while (true) {
+                    //     try {
+                    //         System.out.println("Do you want to use a grey agent? (y/n)");
+                    //         char nextChar = s.next().charAt(0);
+                    //         if (!(nextChar == 'y' || nextChar == 'Y' || nextChar == 'n' || nextChar == 'N')) {
+                    //             throw new IllegalArgumentException();
+                    //         }
+                    //         if (nextChar == 'y' || nextChar == 'Y') {
+                    //             useGreyAgent = true;
+                    //         }
+                    //         break;
+                    //     } catch (IllegalArgumentException e) {
+                    //         System.out.println("Input was not valid, please try again\n");
+                    //     }
+                    // }
                 }
 
                 // If using grey agent ask for potency for grey agent and call grey turn
                 if (useGreyAgent) {
                     int greyPotency = 0;
                     if (isUserPlaying) {
-                        while (true) {
-                            try {
-                                System.out.println("Input a message potency from 1 to 5 for your grey agent");
-                                greyPotency = s.nextInt();
-                                if (greyPotency < 1 || greyPotency > 5) {
-                                    throw new IllegalArgumentException();
-                                }
-                                break;
-                            } catch (IllegalArgumentException e){
-                                System.out.println("Your input was not in the correct range, please try again\n");
+                        Object[] possibilities  = {"1 - red is bad", "2", "3", "4", "5"};
+                        String[] sPossibilities = {"1 - red is bad", "2", "3", "4", "5"};
+                        String string = (String)JOptionPane.showInputDialog(
+                                    null,
+                                    "Please select a message potency for your grey agent.\n"
+                                    + "Higher is more potent.",
+                                    "Blue turn",
+                                    JOptionPane.PLAIN_MESSAGE,
+                                    null,
+                                    possibilities,
+                                    "1");
+                        for(int i = 0; i < sPossibilities.length; i++){
+                            if(string.equals(sPossibilities[i])){
+                                greyPotency = i + 1;
                             }
                         }
+                        // while (true) {
+                        //     try {
+                        //         System.out.println("Input a message potency from 1 to 5 for your grey agent");
+                        //         greyPotency = s.nextInt();
+                        //         if (greyPotency < 1 || greyPotency > 5) {
+                        //             throw new IllegalArgumentException();
+                        //         }
+                        //         break;
+                        //     } catch (IllegalArgumentException e){
+                        //         System.out.println("Your input was not in the correct range, please try again\n");
+                        //     }
+                        // }
                     } else {
                         greyPotency = certainty;
                     }
@@ -164,20 +186,36 @@ public class BlueAgent{
 
         // if user is playing then ask for user input for message potency
         if (isUserPlaying) {
-            // Continually asks for user input until it receives a valid number from 1 to 5
-            while (true) {
-                try {
-                    System.out.println("Select a message certainty from 1 to 5");
-                    this.certainty = s.nextInt();
-                    if (this.certainty < 1 || this.certainty > 5 || this.certainty > energy) {
-                        throw new IllegalArgumentException();
-                    } else {
-                        break;
-                    }
-                } catch (IllegalArgumentException e) {
-                    System.out.println("Your input was either not in the correct range or you don't have the energy for that move\n");
+            Object[] possibilities  = {"1 - red is bad", "2", "3", "4", "5"};
+            String[] sPossibilities = {"1 - red is bad", "2", "3", "4", "5"};
+            String string = (String)JOptionPane.showInputDialog(
+                        null,
+                        "Please select a message certainty.\n"
+                        + "Higher is more potent.",
+                        "Blue turn",
+                        JOptionPane.PLAIN_MESSAGE,
+                        null,
+                        possibilities,
+                        "1");
+            for(int i = 0; i < sPossibilities.length; i++){
+                if(string.equals(sPossibilities[i])){
+                    this.certainty = i + 1;
                 }
             }
+            // Continually asks for user input until it receives a valid number from 1 to 5
+            // while (true) {
+            //     try {
+            //         System.out.println("Select a message certainty from 1 to 5");
+            //         this.certainty = s.nextInt();
+            //         if (this.certainty < 1 || this.certainty > 5 || this.certainty > energy) {
+            //             throw new IllegalArgumentException();
+            //         } else {
+            //             break;
+            //         }
+            //     } catch (IllegalArgumentException e) {
+            //         System.out.println("Your input was either not in the correct range or you don't have the energy for that move\n");
+            //     }
+            // }
         } else {
             this.certainty = certainty;
         }
