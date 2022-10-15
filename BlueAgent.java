@@ -188,19 +188,30 @@ public class BlueAgent{
         if (isUserPlaying) {
             Object[] possibilities  = {"1 - red is bad", "2", "3", "4", "5"};
             String[] sPossibilities = {"1 - red is bad", "2", "3", "4", "5"};
-            String string = (String)JOptionPane.showInputDialog(
-                        null,
-                        "Please select a message certainty.\n"
-                        + "Higher is more potent.",
-                        "Blue turn",
-                        JOptionPane.PLAIN_MESSAGE,
-                        null,
-                        possibilities,
-                        "1");
-            for(int i = 0; i < sPossibilities.length; i++){
-                if(string.equals(sPossibilities[i])){
-                    this.certainty = i + 1;
+            while(true) {
+                String string = (String)JOptionPane.showInputDialog(
+                            null,
+                            "Please select a message certainty.\n"
+                            + "Higher is more potent.",
+                            "Blue turn",
+                            JOptionPane.PLAIN_MESSAGE,
+                            null,
+                            possibilities,
+                            "1");
+            
+                for(int i = 0; i < sPossibilities.length; i++){
+                    if(string.equals(sPossibilities[i])){
+                        this.certainty = i + 1;
+                    }
                 }
+                if (this.certainty <= energy){
+                    break;
+                }
+                JOptionPane.showMessageDialog(null,
+                            "You do not have enough energy to do that.",
+                            "Blue turn",
+                            JOptionPane.WARNING_MESSAGE,
+                            null);
             }
             // Continually asks for user input until it receives a valid number from 1 to 5
             // while (true) {

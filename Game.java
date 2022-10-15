@@ -23,6 +23,7 @@ public class Game extends JPanel{
     private Graphics g;
     static char whoAmI;
     static boolean gameNotOver = true;
+    static boolean auto;
 
     // number of days in the election campaign
     int daysToElection;
@@ -290,17 +291,27 @@ public class Game extends JPanel{
         g.drawString("Green agents: " + greenTeam.length, 635, 33);
         // draw botton bar
         g.setColor(new Color(220,220,220));
-        g.fillRect(0, 750, 1200, 750);
+        g.fillRect(0, 750, 1200, 50);
         // draw the next day button
         g.setColor(new Color(30,144,255));
-        g.fillRect(1070, 750, 1200, 800);
+        g.fillRect(1070, 750, 130, 50);
         g.setColor(Color.BLACK);
         g.drawString("Next Day >>", 1085, 780);
         // draw get green params button
         g.setColor(new Color(80, 200, 120));
-        g.fillRect(0, 750, 125, 800);
+        g.fillRect(0, 750, 125, 50);
         g.setColor(Color.BLACK);
         g.drawString("Green Info", 15, 780);
+        // // draw a button to continue the game without playing
+        // g.setColor(new Color(255, 191, 0));
+        // g.fillRect(930, 750, 130, 50);
+        // g.setColor(Color.BLACK);
+        // if(auto){
+        //     g.drawString(" Continue", 950, 780);
+        // }
+        // else{
+        //     g.drawString("     Stop", 950, 780);
+        // }
         // draw gameover
         if(!gameNotOver){
             g.setColor(new Color(220, 20, 60));
@@ -371,6 +382,7 @@ public class Game extends JPanel{
      * method to initiate the next round of the game
      */
     public void nextRound(){
+        int totalVotes;
         System.out.println("\n----------------------------------------------------\n");
         day++;
         System.out.println("Day " + day);
@@ -383,6 +395,11 @@ public class Game extends JPanel{
         System.out.println("\nRed Teams Turn");
         System.out.println("Sent out a message potency of: " + redAgent.previousTurn);
         System.out.println("Total followers lost: " + redAgent.totalFollowersLost);
+        totalVotes = 0;
+        for (int i = 0; i < greenTeam.length; i++) {
+            if (greenTeam[i].willVote) {totalVotes++;}
+        }
+        System.out.println("TOTAL VOTES AFTER RED: " + totalVotes + "\n");
         // AI plays for blue
         if (blueAgent.energy > 0) {
             int certainty = 0;
@@ -394,12 +411,17 @@ public class Game extends JPanel{
             System.out.println("Sent out a certainty of: " + blueAgent.certainty);
             System.out.println("Energy left: " + blueAgent.energy);
         }
+        totalVotes = 0;
+        for (int i = 0; i < greenTeam.length; i++) {
+            if (greenTeam[i].willVote) {totalVotes++;}
+        }
+        System.out.println("TOTAL VOTES AFTER BLUE: " + totalVotes + "\n");
         GreenAgent.greenTurn(greenTeam, network);
-        // int totalVotes = 0;
-        // for (int i = 0; i < greenTeam.length; i++) {
-        //     if (greenTeam[i].willVote) {totalVotes++;}
-        // }
-        // System.out.println("TOTAL VOTES: " + totalVotes + "\n");
+        totalVotes = 0;
+        for (int i = 0; i < greenTeam.length; i++) {
+            if (greenTeam[i].willVote) {totalVotes++;}
+        }
+        System.out.println("TOTAL VOTES AFTER GREEN: " + totalVotes + "\n");
         
         try {
             Thread.sleep(250);
