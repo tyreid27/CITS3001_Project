@@ -1,4 +1,3 @@
-import java.util.*;
 
 /**
  * This class defines the properties of an agent on the grey class
@@ -16,7 +15,6 @@ public class GreyAgent{
      * constructor for random grey agent
      */
     public GreyAgent(int id, int worksFor){
-        Random rand = new Random();
         this.worksFor = worksFor;
         this.id = id;
     }

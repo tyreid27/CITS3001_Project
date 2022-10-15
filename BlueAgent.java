@@ -120,7 +120,7 @@ public class BlueAgent{
                 if (isUserPlaying) {
                     while (true) {
                         try {
-                            System.out.println("Do you want to use a grey agent? (y/n)");
+                            System.out.println("\nDo you want to use a grey agent? (y/n)");
                             char nextChar = s.next().charAt(0);
                             if (!(nextChar == 'y' || nextChar == 'Y' || nextChar == 'n' || nextChar == 'N')) {
                                 throw new IllegalArgumentException();

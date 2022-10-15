@@ -33,6 +33,7 @@ public class Game extends JPanel{
     BlueAgent blueAgent;
     // 2D array representing adjecency matrix for green team network
     int[][] network;
+    int winner; // 0 for red, 1 for blue, 2 for draw
 
     /**
      * constructor that creates a random network
@@ -287,18 +288,18 @@ public class Game extends JPanel{
      * method to initiate the next round of the game
      */
     public void nextRound(){
-        System.out.println("\n----------------------------------------------------\n");
+        // System.out.println("\n----------------------------------------------------\n");
         day++;
-        System.out.println("Day " + day);
+        // System.out.println("Day " + day);
         // AI plays for red
         int potency = 0;
         if (!redAgent.isUserPlaying) {
             potency = redAgent.useRedAI(greenTeam, daysToElection - day, 'R', 4, network);
         }
         redAgent.redTurn(greenTeam, potency);
-        System.out.println("\nRed Teams Turn");
-        System.out.println("Sent out a message potency of: " + redAgent.previousTurn);
-        System.out.println("Total followers lost: " + redAgent.totalFollowersLost);
+        // System.out.println("\nRed Teams Turn");
+        // System.out.println("Sent out a message potency of: " + redAgent.previousTurn);
+        // System.out.println("Total followers lost: " + redAgent.totalFollowersLost);
         // AI plays for blue
         if (blueAgent.energy > 0) {
             int certainty = 0;
@@ -306,9 +307,9 @@ public class Game extends JPanel{
                 certainty = blueAgent.useBlueAI(greenTeam, daysToElection - day, 'B', 4, network, greyTeam);
             }
             blueAgent.blueTurn(greenTeam, greyTeam, false, certainty);
-            System.out.println("\nBlue Teams Turn");
-            System.out.println("Sent out a certainty of: " + blueAgent.certainty);
-            System.out.println("Energy left: " + blueAgent.energy);
+            // System.out.println("\nBlue Teams Turn");
+            // System.out.println("Sent out a certainty of: " + blueAgent.certainty);
+            // System.out.println("Energy left: " + blueAgent.energy);
         }
         GreenAgent.greenTurn(greenTeam, network);
         // int totalVotes = 0;
@@ -325,16 +326,16 @@ public class Game extends JPanel{
     }
 
     public void start(){
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        // try {
+        //     Thread.sleep(2000);
+        // } catch (InterruptedException e) {
+        //     e.printStackTrace();
+        // }
         while(day != daysToElection){
             repaint();
             nextRound();
         }
-        System.out.println("Game Over");
+        // System.out.println("Game Over");
     }
 
     // Function to add up the total amount of votes and declare a winner
@@ -347,12 +348,15 @@ public class Game extends JPanel{
         }
         if (((double)totalVoters / greenTeam.length) > 0.5){
             System.out.println("Blue Team Wins!");
+            winner = 1;
         }
         else if (((double)totalVoters / greenTeam.length) < 0.5){
             System.out.println("Red Team Wins");
+            winner = 0;
         }
         else {
             System.out.println("Game is a draw");
+            winner = 2;
         }
     }
 
