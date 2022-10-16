@@ -86,7 +86,11 @@ public class Game extends JPanel{
         // initialise array of green team members 
         this.greenTeam = new GreenAgent[nGreen];
         for(int i = 0; i < nGreen; i++)
-            greenTeam[i] = new GreenAgent(i);
+            if (i % 2 == 0) {
+                greenTeam[i] = new GreenAgent(i, false);
+            } else {
+                greenTeam[i] = new GreenAgent(i, true);
+            }
         // initialise the network
         this.network = new int[nGreen][nGreen];
         // array to keep track of which pairs of nodes connections have been decided
@@ -107,21 +111,16 @@ public class Game extends JPanel{
         if (userTeam == 'r' || userTeam == 'R') {
             this.redAgent = new RedAgent(true);
             this.blueAgent = new BlueAgent((days / 2) * 5, false);
-            this.blueAI = new BlueAI();
-            this.whoAmI = 'R';
         } 
         else if (userTeam == 'b' || userTeam == 'B') {
             this.redAgent = new RedAgent(false);
             this.blueAgent = new BlueAgent((days / 2) * 5, true);
-            
-            this.whoAmI = 'B';
         }
         else {
             this.redAgent = new RedAgent(false);
             this.blueAgent = new BlueAgent((days / 2) * 5, false);
-            this.blueAI = new BlueAI();
-            this.whoAmI = 'N';
         }
+        this.blueAI = new BlueAI();
         this.day = 0;
     }
 
@@ -172,7 +171,11 @@ public class Game extends JPanel{
         // init array of green team members
         this.greenTeam = new GreenAgent[nGreen];
         for(int i = 0; i < nGreen; i++)
-            greenTeam[i] = new GreenAgent(i);
+            if (i % 2 == 0) {
+                greenTeam[i] = new GreenAgent(i, false);
+            } else {
+                greenTeam[i] = new GreenAgent(i, true);
+            }
         // initialise the network
         this.network = new int[nGreen][nGreen];
         try{
@@ -192,7 +195,6 @@ public class Game extends JPanel{
         if (userTeam == 'r' || userTeam == 'R') {
             this.redAgent = new RedAgent(true);
             this.blueAgent = new BlueAgent((days / 2) * 5, false);
-            this.blueAI = new BlueAI();
         } 
         else if (userTeam == 'b' || userTeam == 'B') {
             this.redAgent = new RedAgent(false);
@@ -201,8 +203,8 @@ public class Game extends JPanel{
         else {
             this.redAgent = new RedAgent(false);
             this.blueAgent = new BlueAgent((days / 2) * 5, false);
-            this.blueAI = new BlueAI();
         }
+        this.blueAI = new BlueAI();
         this.day = 0;
     }
 
@@ -309,16 +311,6 @@ public class Game extends JPanel{
         g.fillRect(0, 750, 125, 50);
         g.setColor(Color.BLACK);
         g.drawString("Green Info", 15, 780);
-        // // draw a button to continue the game without playing
-        // g.setColor(new Color(255, 191, 0));
-        // g.fillRect(930, 750, 130, 50);
-        // g.setColor(Color.BLACK);
-        // if(auto){
-        //     g.drawString(" Continue", 950, 780);
-        // }
-        // else{
-        //     g.drawString("     Stop", 950, 780);
-        // }
         // draw gameover
         if(!gameNotOver){
             g.setColor(new Color(220, 20, 60));
@@ -394,7 +386,6 @@ public class Game extends JPanel{
         if (!redAgent.isUserPlaying) {
             potency = redAgent.useRedAI(greenTeam, daysToElection - day, 'R', 4, network);
         }
-        System.out.println("Red: " + potency);
         redAgent.redTurn(greenTeam, potency);
         // AI plays for blue
         if (blueAgent.energy > 0) {
@@ -405,14 +396,14 @@ public class Game extends JPanel{
                     vCar++;
             }
             certainty = blueAI.nextCertainty(vCar);
+            if (certainty > blueAgent.energy) {
+                certainty = blueAgent.energy;
+            }
             boolean useGrey = false;
             if(blueAgent.selectedGreyAgent < greyTeam.length){
                 useGrey = blueAI.useGrey();
             }
-            System.out.println("Blue: " + certainty + " - " + useGrey);
-            // if (!blueAgent.isUserPlaying) {
-            //     certainty = blueAgent.useBlueAI(greenTeam, daysToElection - day, 'B', 4, network, greyTeam);
-            // }
+
             blueAgent.blueTurn(greenTeam, greyTeam, useGrey, certainty);
             vCar = 0;
             for (int i = 0; i < greenTeam.length; i++){
@@ -429,11 +420,6 @@ public class Game extends JPanel{
         }
         blueAI.updateVCAGreen(vCar);
 
-        // try {
-        //     Thread.sleep(250);
-        // } catch (InterruptedException e) {
-        //     e.printStackTrace();
-        // }
         day++;
     }
 
@@ -453,12 +439,12 @@ public class Game extends JPanel{
                 totalVoters++;
             }
         }
-        if (((double)totalVoters / greenTeam.length) > 0.5){
+        if (((double)totalVoters / (double)greenTeam.length) > 0.5){
             System.out.println("Blue Team Wins!");
             winner = 1;
             JOptionPane.showMessageDialog(frame, "Game Over.\nBlue Team Wins!");
         }
-        else if (((double)totalVoters / greenTeam.length) < 0.5){
+        else if (((double)totalVoters / (double)greenTeam.length) < 0.5){
             System.out.println("Red Team Wins");
             JOptionPane.showMessageDialog(frame, "Game Over.\nRed Team Wins!");
             winner = 0;

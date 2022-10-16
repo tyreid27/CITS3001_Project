@@ -22,7 +22,12 @@ public class BlueAgent{
     public GreenAgent[] copyState(GreenAgent[] greenTeam){
         GreenAgent[] copy = new GreenAgent[greenTeam.length];
         for(int i = 0; i < greenTeam.length; i++){
-            copy[i] = new GreenAgent(i);
+            if (i % 2 == 0) {
+                copy[i] = new GreenAgent(i, false);
+            } else {
+                copy[i] = new GreenAgent(i, true);
+            }
+            // copy[i] = new GreenAgent(i);
             copy[i].willVote = greenTeam[i].willVote;
             copy[i].uncertainty = greenTeam[i].uncertainty;
             copy[i].id = greenTeam[i].id;
@@ -130,8 +135,8 @@ public class BlueAgent{
                 if (useGreyAgent) {
                     int greyPotency = 0;
                     if (isUserPlaying) {
-                        Object[] possibilities  = {"1 - red is bad", "2", "3", "4", "5"};
-                        String[] sPossibilities = {"1 - red is bad", "2", "3", "4", "5"};
+                        Object[] possibilities  = {"1 - We", "2 - Answer", "3 - To", "4 - No", "5 - One"};
+                        String[] sPossibilities = {"1 - We", "2 - Answer", "3 - To", "4 - No", "5 - One"};
                         String string = (String)JOptionPane.showInputDialog(
                                     null,
                                     "Please select a message potency for your grey agent.\n"
@@ -151,7 +156,6 @@ public class BlueAgent{
                     }
                     //System.out.println("Using Grey Agent");
                     greyTeam[selectedGreyAgent].greyTurn(greenTeam, greyPotency);
-                    System.out.println(greyTeam[selectedGreyAgent].worksFor);
                     selectedGreyAgent++;
                     return;
                 }
@@ -160,8 +164,8 @@ public class BlueAgent{
 
         // if user is playing then ask for user input for message potency
         if (isUserPlaying) {
-            Object[] possibilities  = {"1 - red is bad", "2", "3", "4", "5"};
-            String[] sPossibilities = {"1 - red is bad", "2", "3", "4", "5"};
+            Object[] possibilities  = {"1 - I smell fine thank you", "2 - We strive to help the community", "3 - Red is fake news", "4 - Red has lower taxes but higher corruption!", "5 - Siding with red will our country in ruins"};
+            String[] sPossibilities = {"1 - I smell fine thank you", "2 - We strive to help the community", "3 - Red is fake news", "4 - Red has lower taxes but higher corruption!", "5 - Siding with red will our country in ruins"};
             while(true) {
                 String string = (String)JOptionPane.showInputDialog(
                             null,
@@ -193,15 +197,15 @@ public class BlueAgent{
 
         for (int i = 0; i < greenTeam.length; i++) {
             // Allows blue team to gain energy when they gain voters. Different numbers of voters gained is required based on how many green agents there are
-            if (greenTeam.length > 1000 && numGainedVoters == 10) {
+            if (greenTeam.length > 1000 && numGainedVoters == 20) {
                 energy += 1;
                 numGainedVoters = 0;
             }
-            if (greenTeam.length > 100 && numGainedVoters == 5) {
+            if (greenTeam.length > 100 && numGainedVoters == 10) {
                 energy += 1;
                 numGainedVoters = 0;
             }
-            if (greenTeam.length > 10 && numGainedVoters == 2) {
+            if (greenTeam.length > 10 && numGainedVoters == 5) {
                 energy += 1;
                 numGainedVoters = 0;
             }
@@ -209,7 +213,7 @@ public class BlueAgent{
             // uncertainty of current green agent
             double currentUncertainty = greenTeam[i].uncertainty;
             // uncertaintyChange calculated to change uncertainty by 0 - 2.5 based on current uncertainty level and message potency
-            double uncertaintyChange = (currentUncertainty * (this.certainty / 2)) / 10;
+            double uncertaintyChange = (currentUncertainty * (this.certainty / 2)) / 12;
 
             if (greenTeam[i].willVote) {
                 if ((currentUncertainty - uncertaintyChange) < 0) {

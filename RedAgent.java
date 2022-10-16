@@ -23,7 +23,12 @@ public class RedAgent {
     public GreenAgent[] copyState(GreenAgent[] greenTeam){
         GreenAgent[] copy = new GreenAgent[greenTeam.length];
         for(int i = 0; i < greenTeam.length; i++){
-            copy[i] = new GreenAgent(i);
+            if (i % 2 == 0) {
+                copy[i] = new GreenAgent(i, false);
+            } else {
+                copy[i] = new GreenAgent(i, true);
+            }
+            // copy[i] = new GreenAgent(i);
             copy[i].willVote = greenTeam[i].willVote;
             copy[i].uncertainty = greenTeam[i].uncertainty;
             copy[i].id = greenTeam[i].id;
@@ -98,8 +103,8 @@ public class RedAgent {
         // if user is playing then ask for user input for message potency
         if (isUserPlaying) {
             Scanner s = new Scanner(System.in);
-            Object[] possibilities  = {"1 - blue is bad", "2", "3", "4", "5"};
-            String[] sPossibilities = {"1 - blue is bad", "2", "3", "4", "5"};
+            Object[] possibilities  = {"1 - blue is smelly", "2 - My 4 year old could run a country better than blue", "3 - Blue has comitted tax fraud!", "4 - People who support Blue are the same people who think that global warming is real", "5 - The Earth is flat just like Blue's message"};
+            String[] sPossibilities = {"1 - blue is smelly", "2 - My 4 year old could run a country better than blue", "3 - Blue has comitted tax fraud!", "4 - People who support Blue are the same people who think that global warming is real", "5 - The Earth is flat just like Blue's message"};
             String string = (String)JOptionPane.showInputDialog(
                         null,
                         "Please select a message potency.\n"
