@@ -12,7 +12,6 @@ import java.awt.event.*;
     this.team = team;
     title = t;
   }
-  
   public void paintComponent(Graphics graphics) {
     super.paintComponent(graphics);
     if (wins == null || wins.length == 0) {
@@ -59,7 +58,11 @@ import java.awt.event.*;
         valueQ += (int) (maxWins * scale);
         height = -height;
       }
-      graphics.setColor(Color.blue);
+      if (j == 0) {
+        graphics.setColor(Color.red);
+      } else {
+        graphics.setColor(Color.blue);
+      }
       graphics.fillRect(valueP, valueQ, barWidth - 2, height);
       graphics.setColor(Color.black);
       graphics.drawRect(valueP, valueQ, barWidth - 2, height);
@@ -72,7 +75,7 @@ import java.awt.event.*;
   int redWins = 0;
   int blueWins = 0;
   for (int i = 0; i < 100; i++) {
-    Game game = new Game(5, 100, 5, 20, 50, 'n');
+    Game game = new Game(15, 25, 5, 3, 50, 'n');
     game.start();
     game.end();
     if (game.winner == 0) {
@@ -84,14 +87,13 @@ import java.awt.event.*;
   }
   JFrame frame = new JFrame();
   frame.setSize(350, 300);
-  double[] wins= new double[2];
+  double[] wins = new double[2];
   String[] team = new String[2];
   wins[0] = redWins;
-  team[0] = "Red Team";
+  team[0] = "Red Team Wins: " + redWins;
 
   wins[1] = blueWins;
-  team[1] = "Blue Team";
-
+  team[1] = "Blue Team Wins: " + blueWins;
   
   frame.getContentPane().add(new tests(wins, team,
     "Total wins"));

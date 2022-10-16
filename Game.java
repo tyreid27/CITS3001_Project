@@ -400,11 +400,11 @@ public class Game extends JPanel{
         }
         GreenAgent.greenTurn(greenTeam, network);
 
-        try {
-            Thread.sleep(250);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        // try {
+        //     Thread.sleep(250);
+        // } catch (InterruptedException e) {
+        //     e.printStackTrace();
+        // }
     }
 
     public void start(){
@@ -412,7 +412,6 @@ public class Game extends JPanel{
             repaint();
             //nextRound();
         }
-        // System.out.println("Game Over");
     }
 
     // Function to add up the total amount of votes and declare a winner

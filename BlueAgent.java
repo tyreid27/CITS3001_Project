@@ -124,21 +124,6 @@ public class BlueAgent{
                     if(useGreyPrompt == 0){
                         useGreyAgent = true;
                     }
-                    // while (true) {
-                    //     try {
-                    //         System.out.println("Do you want to use a grey agent? (y/n)");
-                    //         char nextChar = s.next().charAt(0);
-                    //         if (!(nextChar == 'y' || nextChar == 'Y' || nextChar == 'n' || nextChar == 'N')) {
-                    //             throw new IllegalArgumentException();
-                    //         }
-                    //         if (nextChar == 'y' || nextChar == 'Y') {
-                    //             useGreyAgent = true;
-                    //         }
-                    //         break;
-                    //     } catch (IllegalArgumentException e) {
-                    //         System.out.println("Input was not valid, please try again\n");
-                    //     }
-                    // }
                 }
 
                 // If using grey agent ask for potency for grey agent and call grey turn
@@ -161,18 +146,6 @@ public class BlueAgent{
                                 greyPotency = i + 1;
                             }
                         }
-                        // while (true) {
-                        //     try {
-                        //         System.out.println("Input a message potency from 1 to 5 for your grey agent");
-                        //         greyPotency = s.nextInt();
-                        //         if (greyPotency < 1 || greyPotency > 5) {
-                        //             throw new IllegalArgumentException();
-                        //         }
-                        //         break;
-                        //     } catch (IllegalArgumentException e){
-                        //         System.out.println("Your input was not in the correct range, please try again\n");
-                        //     }
-                        // }
                     } else {
                         greyPotency = certainty;
                     }
@@ -213,20 +186,6 @@ public class BlueAgent{
                             JOptionPane.WARNING_MESSAGE,
                             null);
             }
-            // Continually asks for user input until it receives a valid number from 1 to 5
-            // while (true) {
-            //     try {
-            //         System.out.println("Select a message certainty from 1 to 5");
-            //         this.certainty = s.nextInt();
-            //         if (this.certainty < 1 || this.certainty > 5 || this.certainty > energy) {
-            //             throw new IllegalArgumentException();
-            //         } else {
-            //             break;
-            //         }
-            //     } catch (IllegalArgumentException e) {
-            //         System.out.println("Your input was either not in the correct range or you don't have the energy for that move\n");
-            //     }
-            // }
         } else {
             this.certainty = certainty;
         }
@@ -249,7 +208,7 @@ public class BlueAgent{
             // uncertainty of current green agent
             double currentUncertainty = greenTeam[i].uncertainty;
             // uncertaintyChange calculated to change uncertainty by 0 - 2.5 based on current uncertainty level and message potency
-            double uncertaintyChange = (currentUncertainty * (this.certainty / 2)) / 15;
+            double uncertaintyChange = (currentUncertainty * (this.certainty / 2)) / 14;
 
             if (greenTeam[i].willVote) {
                 if ((currentUncertainty - uncertaintyChange) < 0) {
