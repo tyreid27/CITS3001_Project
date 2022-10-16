@@ -151,6 +151,7 @@ public class BlueAgent{
                     }
                     //System.out.println("Using Grey Agent");
                     greyTeam[selectedGreyAgent].greyTurn(greenTeam, greyPotency);
+                    System.out.println(greyTeam[selectedGreyAgent].worksFor);
                     selectedGreyAgent++;
                     return;
                 }
@@ -208,7 +209,7 @@ public class BlueAgent{
             // uncertainty of current green agent
             double currentUncertainty = greenTeam[i].uncertainty;
             // uncertaintyChange calculated to change uncertainty by 0 - 2.5 based on current uncertainty level and message potency
-            double uncertaintyChange = (currentUncertainty * (this.certainty / 2)) / 14;
+            double uncertaintyChange = (currentUncertainty * (this.certainty / 2)) / 10;
 
             if (greenTeam[i].willVote) {
                 if ((currentUncertainty - uncertaintyChange) < 0) {
