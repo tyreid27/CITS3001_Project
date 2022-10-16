@@ -34,6 +34,7 @@ public class Game extends JPanel{
     GreyAgent[] greyTeam;
     RedAgent redAgent;
     BlueAgent blueAgent;
+    BlueAI blueAI;
     // 2D array representing adjecency matrix for green team network
     int[][] network;
     int winner; // 0 for red, 1 for blue, 2 for draw
@@ -106,16 +107,19 @@ public class Game extends JPanel{
         if (userTeam == 'r' || userTeam == 'R') {
             this.redAgent = new RedAgent(true);
             this.blueAgent = new BlueAgent((days / 2) * 5, false);
+            this.blueAI = new BlueAI();
             this.whoAmI = 'R';
         } 
         else if (userTeam == 'b' || userTeam == 'B') {
             this.redAgent = new RedAgent(false);
             this.blueAgent = new BlueAgent((days / 2) * 5, true);
+            
             this.whoAmI = 'B';
         }
         else {
             this.redAgent = new RedAgent(false);
             this.blueAgent = new BlueAgent((days / 2) * 5, false);
+            this.blueAI = new BlueAI();
             this.whoAmI = 'N';
         }
         this.day = 0;
@@ -188,6 +192,7 @@ public class Game extends JPanel{
         if (userTeam == 'r' || userTeam == 'R') {
             this.redAgent = new RedAgent(true);
             this.blueAgent = new BlueAgent((days / 2) * 5, false);
+            this.blueAI = new BlueAI();
         } 
         else if (userTeam == 'b' || userTeam == 'B') {
             this.redAgent = new RedAgent(false);
@@ -196,6 +201,7 @@ public class Game extends JPanel{
         else {
             this.redAgent = new RedAgent(false);
             this.blueAgent = new BlueAgent((days / 2) * 5, false);
+            this.blueAI = new BlueAI();
         }
         this.day = 0;
     }
@@ -383,28 +389,53 @@ public class Game extends JPanel{
      * method to initiate the next round of the game
      */
     public void nextRound(){
-        day++;
         // AI plays for red
         int potency = 0;
         if (!redAgent.isUserPlaying) {
             potency = redAgent.useRedAI(greenTeam, daysToElection - day, 'R', 4, network);
         }
+        System.out.println("Red: " + potency);
         redAgent.redTurn(greenTeam, potency);
         // AI plays for blue
         if (blueAgent.energy > 0) {
             int certainty = 0;
-            if (!blueAgent.isUserPlaying) {
-                certainty = blueAgent.useBlueAI(greenTeam, daysToElection - day, 'B', 4, network, greyTeam);
+            int vCar = 0;
+            for (int i = 0; i < greenTeam.length; i++){
+                if( greenTeam[i].willVote == true)
+                    vCar++;
             }
-            blueAgent.blueTurn(greenTeam, greyTeam, false, certainty);
+            certainty = blueAI.nextCertainty(vCar);
+            boolean useGrey = false;
+            if(blueAgent.selectedGreyAgent < greyTeam.length){
+                useGrey = blueAI.useGrey();
+            }
+            System.out.println("Blue: " + certainty + " - " + useGrey);
+            // if (!blueAgent.isUserPlaying) {
+            //     certainty = blueAgent.useBlueAI(greenTeam, daysToElection - day, 'B', 4, network, greyTeam);
+            // }
+            blueAgent.blueTurn(greenTeam, greyTeam, useGrey, certainty);
+            vCar = 0;
+            for (int i = 0; i < greenTeam.length; i++){
+                if( greenTeam[i].willVote == true)
+                    vCar++;
+            }
+            blueAI.updateVCABlue(vCar);
         }
         GreenAgent.greenTurn(greenTeam, network);
+        int vCar = 0;
+        for (int i = 0; i < greenTeam.length; i++){
+            if( greenTeam[i].willVote == true)
+                vCar++;
+        }
+        blueAI.updateVCAGreen(vCar);
 
         try {
             Thread.sleep(250);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        day++;
     }
 
     public void start(){

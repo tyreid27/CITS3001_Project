@@ -170,7 +170,7 @@ public class RedAgent {
                 }
             }
              // uncertaintyChange calculated to change uncertainty by 0 - 2.5 based on current uncertainty level and message potency
-            double uncertaintyChange = (currentUncertainty * (messagePotency / 2)) / 10;
+            double uncertaintyChange = (currentUncertainty * (messagePotency / 2)) / 8;
 
             if (!greenTeam[i].willVote) {
                 if ((currentUncertainty - uncertaintyChange) < 0) {
