@@ -86,11 +86,7 @@ public class Game extends JPanel{
         // initialise array of green team members 
         this.greenTeam = new GreenAgent[nGreen];
         for(int i = 0; i < nGreen; i++)
-            if (i % 2 == 0) {
-                greenTeam[i] = new GreenAgent(i, false);
-            } else {
-                greenTeam[i] = new GreenAgent(i, true);
-            }
+            greenTeam[i] = new GreenAgent(i);
         // initialise the network
         this.network = new int[nGreen][nGreen];
         // array to keep track of which pairs of nodes connections have been decided
@@ -171,11 +167,7 @@ public class Game extends JPanel{
         // init array of green team members
         this.greenTeam = new GreenAgent[nGreen];
         for(int i = 0; i < nGreen; i++)
-            if (i % 2 == 0) {
-                greenTeam[i] = new GreenAgent(i, false);
-            } else {
-                greenTeam[i] = new GreenAgent(i, true);
-            }
+            greenTeam[i] = new GreenAgent(i);
         // initialise the network
         this.network = new int[nGreen][nGreen];
         try{

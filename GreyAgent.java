@@ -64,11 +64,5 @@ public class GreyAgent{
             }
            
         }
-        // if (worksFor == 0) {
-        //     System.out.println("I am a lifeline for Blue Team");
-        // } else {
-        //     System.out.println("I am a spy for Red Team");
-        // }
-        // System.out.println("Sent out a potency value of " + potency + "\n");
     }
 }

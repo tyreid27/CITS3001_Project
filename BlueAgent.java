@@ -22,12 +22,7 @@ public class BlueAgent{
     public GreenAgent[] copyState(GreenAgent[] greenTeam){
         GreenAgent[] copy = new GreenAgent[greenTeam.length];
         for(int i = 0; i < greenTeam.length; i++){
-            if (i % 2 == 0) {
-                copy[i] = new GreenAgent(i, false);
-            } else {
-                copy[i] = new GreenAgent(i, true);
-            }
-            // copy[i] = new GreenAgent(i);
+            copy[i] = new GreenAgent(i);
             copy[i].willVote = greenTeam[i].willVote;
             copy[i].uncertainty = greenTeam[i].uncertainty;
             copy[i].id = greenTeam[i].id;
@@ -197,11 +192,11 @@ public class BlueAgent{
 
         for (int i = 0; i < greenTeam.length; i++) {
             // Allows blue team to gain energy when they gain voters. Different numbers of voters gained is required based on how many green agents there are
-            if (greenTeam.length > 1000 && numGainedVoters == 20) {
+            if (greenTeam.length > 1000 && numGainedVoters == 50) {
                 energy += 1;
                 numGainedVoters = 0;
             }
-            if (greenTeam.length > 100 && numGainedVoters == 10) {
+            if (greenTeam.length > 100 && numGainedVoters == 15) {
                 energy += 1;
                 numGainedVoters = 0;
             }
@@ -213,7 +208,7 @@ public class BlueAgent{
             // uncertainty of current green agent
             double currentUncertainty = greenTeam[i].uncertainty;
             // uncertaintyChange calculated to change uncertainty by 0 - 2.5 based on current uncertainty level and message potency
-            double uncertaintyChange = (currentUncertainty * (this.certainty / 2)) / 12;
+            double uncertaintyChange = (currentUncertainty * (this.certainty / 2)) / 10;
 
             if (greenTeam[i].willVote) {
                 if ((currentUncertainty - uncertaintyChange) < 0) {

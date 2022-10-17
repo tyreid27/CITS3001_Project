@@ -23,12 +23,7 @@ public class RedAgent {
     public GreenAgent[] copyState(GreenAgent[] greenTeam){
         GreenAgent[] copy = new GreenAgent[greenTeam.length];
         for(int i = 0; i < greenTeam.length; i++){
-            if (i % 2 == 0) {
-                copy[i] = new GreenAgent(i, false);
-            } else {
-                copy[i] = new GreenAgent(i, true);
-            }
-            // copy[i] = new GreenAgent(i);
+            copy[i] = new GreenAgent(i);
             copy[i].willVote = greenTeam[i].willVote;
             copy[i].uncertainty = greenTeam[i].uncertainty;
             copy[i].id = greenTeam[i].id;

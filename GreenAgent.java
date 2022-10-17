@@ -24,20 +24,18 @@ public class GreenAgent {
     /**
      * constructor for green agent that sets random parameters for willVote and uncertainty.
      */
-     public GreenAgent(int id, boolean willVote){
+     public GreenAgent(int id){
         Random rand = new Random();
-        // about 50% of green agents start voting
-        // if(rand.nextInt(0,2) == 0)
-        //     willVote = true;
-        // else
-        //     willVote = false;
+        //about 50% of green agents start voting
+        if(rand.nextInt(0,2) == 0)
+            willVote = true;
+        else
+            willVote = false;
         // choose int between 0 and 10
-        this.uncertainty = rand.nextDouble(7,8);
+        this.uncertainty = rand.nextDouble(0,9);
         this.id = id;
         this.canRedCommunicate = true;
-        this.willVote = willVote;
      }
-
 
      public static void greenTurn(GreenAgent[] greenTeam, int[][] network){
         // a new green agent array so the influencing process is fair for all agents

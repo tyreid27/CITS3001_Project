@@ -75,7 +75,7 @@ import java.awt.event.*;
   int redWins = 0;
   int blueWins = 0;
   for (int i = 0; i < 100; i++) {
-    Game game = new Game(15, 51, 10, 3, 50, 'n');
+    Game game = new Game(15, 51, 10, 20, 50, 'n');
     game.start();
     game.end();
     if (game.winner == 0) {
@@ -96,7 +96,7 @@ import java.awt.event.*;
   team[1] = "Blue Team Wins: " + blueWins;
   
   frame.getContentPane().add(new tests(wins, team,
-    "Starting Uncertainty 0 - 10"));
+    "Network Density - 20"));
 
   WindowListener winListener = new WindowAdapter() {
     public void windowClosing(WindowEvent event) {
