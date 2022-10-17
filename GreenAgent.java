@@ -32,7 +32,7 @@ public class GreenAgent {
         else
             willVote = false;
         // choose int between 0 and 10
-        this.uncertainty = rand.nextDouble(0,9);
+        this.uncertainty = rand.nextDouble(7, 8);
         this.id = id;
         this.canRedCommunicate = true;
      }
